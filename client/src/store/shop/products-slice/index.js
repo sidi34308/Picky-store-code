@@ -18,7 +18,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
     });
 
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get?${query}`
+      `http://picky-store-code.vercel.app/api/shop/products/get?${query}`
     );
 
     console.log("all product", result.data);
@@ -31,7 +31,7 @@ export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get/${id}`
+      `http://picky-store-code.vercel.app/api/shop/products/get/${id}`
     );
 
     return result?.data;

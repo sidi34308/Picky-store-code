@@ -3,7 +3,7 @@ import axios from "axios";
 export async function sendOrderEmail(newOrder) {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/sendOrderEmail",
+      "http://picky-store-code.vercel.app/api/sendOrderEmail",
       {
         to: "sidi34308s@gmail.com",
         subject: "New Order Received",
