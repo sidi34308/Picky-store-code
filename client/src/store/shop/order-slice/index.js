@@ -13,7 +13,7 @@ export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
     const response = await axios.post(
-      "http://picky-store-code.vercel.app/api/shop/order/create",
+      "https://picky-store-code.vercel.app/api/shop/order/create",
       orderData
     );
 

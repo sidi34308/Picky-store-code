@@ -18,9 +18,7 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 
 const sendOrderEmail = require("./routes/common/feature-routes");
 
-//create a database connection -> u can also
-//create a separate file for this and then import/use that file here
-
+// Create a database connection
 mongoose
   .connect("mongodb+srv://sidi34308s:Sidi12345@cluster0.utxr8.mongodb.net/")
   .then(() => console.log("MongoDB connected"))
@@ -31,21 +29,30 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://picky-store-code-frontend.vercel.app",
+    origin: [
+      "http://localhost:5173",
+      "https://picky-store-code-frontend.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "PUT"],
-    // allowedHeaders: [
-    //   "Content-Type",
-    //   "Authorization",
-    //   "Cache-Control",
-    //   "Expires",
-    //   "Pragma",
-    // ],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cache-Control",
+      "Expires",
+      "Pragma",
+    ],
     credentials: true,
   })
 );
 
 app.use(cookieParser());
 app.use(express.json());
+
+// Test route to verify server is running
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Server is running", domain: req.headers.host });
+});
+
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);

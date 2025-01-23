@@ -10,7 +10,7 @@ export const getFeatureImages = createAsyncThunk(
   "/order/getFeatureImages",
   async () => {
     const response = await axios.get(
-      `http://picky-store-code.vercel.app/api/common/feature/get`
+      `https://picky-store-code.vercel.app/api/common/feature/get`
     );
 
     return response.data;
@@ -21,7 +21,7 @@ export const addFeatureImage = createAsyncThunk(
   "/order/addFeatureImage",
   async (image) => {
     const response = await axios.post(
-      `http://picky-store-code.vercel.app/api/common/feature/add`,
+      `https://picky-store-code.vercel.app/api/common/feature/add`,
       { image }
     );
 
