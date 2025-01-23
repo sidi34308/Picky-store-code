@@ -69,7 +69,7 @@ function App() {
 
           <Route path="/" element={<ShoppingHome />} />
           <Route path="/listing" element={<ShoppingListing />} />
-          <Route path="account" element={<ShoppingAccount />} />
+          {/* <Route path="account" element={<ShoppingAccount />} /> */}
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="/search" element={<SearchProducts />} />
