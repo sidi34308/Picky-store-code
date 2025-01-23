@@ -11,7 +11,7 @@ export const updateProductQuantities = createAsyncThunk(
   async (cartItems, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/admin/orders/update-quantities",
+        "http://picky-store-code.vercel.app/api/admin/orders/update-quantities",
         {
           cartItems,
         }
@@ -27,7 +27,7 @@ export const getAllOrdersForAdmin = createAsyncThunk(
   "/order/getAllOrdersForAdmin",
   async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/orders/get`
+      `http://picky-store-code.vercel.app/api/admin/orders/get`
     );
 
     return response.data;
@@ -38,7 +38,7 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
   "/order/getOrderDetailsForAdmin",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/orders/details/${id}`
+      `http://picky-store-code.vercel.app/api/admin/orders/details/${id}`
     );
 
     return response.data;
@@ -49,7 +49,7 @@ export const updateOrderStatus = createAsyncThunk(
   "/order/updateOrderStatus",
   async ({ id, orderStatus }) => {
     const response = await axios.put(
-      `http://localhost:5000/api/admin/orders/update/${id}`,
+      `http://picky-store-code.vercel.app/api/admin/orders/update/${id}`,
       {
         orderStatus,
       }
