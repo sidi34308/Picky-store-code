@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const initialState = {
   approvalURL: null,
@@ -13,7 +14,7 @@ export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
     const response = await axios.post(
-      "https://picky-store-code.vercel.app/api/shop/order/create",
+      `${API_BASE_URL}/api/shop/order/create`,
       orderData
     );
 
@@ -25,7 +26,7 @@ export const capturePayment = createAsyncThunk(
   "/order/capturePayment",
   async ({ paymentId, payerId, orderId }) => {
     const response = await axios.post(
-      "http://picky-store-code.vercel.app/api/shop/order/capture",
+      `${API_BASE_URL}/api/shop/order/capture`,
       {
         paymentId,
         payerId,
@@ -41,7 +42,7 @@ export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `http://picky-store-code.vercel.app/api/shop/order/list/${userId}`
+      `${API_BASE_URL}/api/shop/order/list/${userId}`
     );
 
     return response.data;
@@ -52,7 +53,7 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `http://picky-store-code.vercel.app/api/shop/order/details/${id}`
+      `${API_BASE_URL}/api/shop/order/details/${id}`
     );
 
     return response.data;

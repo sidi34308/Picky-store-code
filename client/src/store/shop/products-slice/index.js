@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 axios.defaults.withCredentials = true; // to allow axios send cookie data
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log(API_BASE_URL, "API_BASE_URL");
 const initialState = {
   isLoading: false,
   productList: [],
@@ -19,7 +20,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
     });
 
     const result = await axios.get(
-      `https://picky-store-code.vercel.app/api/shop/products/get?${query}`
+      `${API_BASE_URL}/api/shop/products/get?${query}`
     );
 
     console.log("all product", result.data);
@@ -32,7 +33,7 @@ export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
     const result = await axios.get(
-      `https://picky-store-code.vercel.app/api/shop/products/get/${id}`
+      `${API_BASE_URL}/api/shop/products/get/${id}`
     );
 
     return result?.data;

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-axios.defaults.withCredentials = true; // to allow axios send cookie data
+axios.defaults.withCredentials = true;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const initialState = {
   orderList: [],
   orderDetails: null,
@@ -11,7 +13,7 @@ export const updateProductQuantities = createAsyncThunk(
   async (cartItems, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://picky-store-code.vercel.app/api/admin/orders/update-quantities",
+        `${API_BASE_URL}/api/admin/orders/update-quantities`,
         {
           cartItems,
         }
@@ -26,9 +28,7 @@ export const updateProductQuantities = createAsyncThunk(
 export const getAllOrdersForAdmin = createAsyncThunk(
   "/order/getAllOrdersForAdmin",
   async () => {
-    const response = await axios.get(
-      `https://picky-store-code.vercel.app/api/admin/orders/get`
-    );
+    const response = await axios.get(`${API_BASE_URL}/api/admin/orders/get`);
 
     return response.data;
   }
@@ -38,7 +38,7 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
   "/order/getOrderDetailsForAdmin",
   async (id) => {
     const response = await axios.get(
-      `https://picky-store-code.vercel.app/api/admin/orders/details/${id}`
+      `${API_BASE_URL}/api/admin/orders/details/${id}`
     );
 
     return response.data;
@@ -49,7 +49,7 @@ export const updateOrderStatus = createAsyncThunk(
   "/order/updateOrderStatus",
   async ({ id, orderStatus }) => {
     const response = await axios.put(
-      `https://picky-store-code.vercel.app/api/admin/orders/update/${id}`,
+      `${API_BASE_URL}/api/admin/orders/update/${id}`,
       {
         orderStatus,
       }

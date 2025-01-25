@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 axios.defaults.withCredentials = true; // to allow axios send cookie data
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // const initialState = {
 //   isAuthenticated: false,
@@ -18,7 +19,7 @@ export const registerUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "https://picky-store-code.vercel.app/api/auth/register",
+      `${API_BASE_URL}/api/auth/register`,
       formData,
       {
         withCredentials: true,
@@ -34,7 +35,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "https://picky-store-code.vercel.app/api/auth/login",
+      `${API_BASE_URL}/api/auth/login`,
       formData,
       {
         withCredentials: true,
@@ -50,7 +51,7 @@ export const logoutUser = createAsyncThunk(
 
   async () => {
     const response = await axios.post(
-      "https://picky-store-code.vercel.app/api/auth/logout",
+      `${API_BASE_URL}/api/auth/logout`,
       {},
       {
         withCredentials: true,
@@ -65,16 +66,13 @@ export const checkAuth = createAsyncThunk(
   "/auth/checkauth",
 
   async () => {
-    const response = await axios.get(
-      "https://picky-store-code.vercel.app/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate",
-        },
-      }
-    );
+    const response = await axios.get(`${API_BASE_URL}/api/auth/check-auth`, {
+      withCredentials: true,
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+      },
+    });
 
     return response.data;
   }
