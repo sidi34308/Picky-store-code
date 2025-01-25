@@ -27,20 +27,7 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Cache-Control",
-      "Expires",
-      "Pragma",
-    ],
-    credentials: true,
-  })
-);
+app.options("*", cors()); // Allow OPTIONS requests for all routes
 
 app.use(cookieParser());
 app.use(express.json());
