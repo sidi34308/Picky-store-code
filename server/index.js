@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // Test route to verify server is running
-app.get("/api/test", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Server is running", domain: req.headers.host });
 });
 
