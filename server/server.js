@@ -32,6 +32,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://picky-store-code-frontend.vercel.app",
+      "https://picky-store-code.vercel.app",
     ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
