@@ -29,8 +29,16 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://picky-frontend.onrender.com", // Allow this specific origin
-    methods: ["GET", "POST", "PUT", "DELETE"], // Add allowed HTTP methods
+    origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cache-Control",
+      "Expires",
+      "Pragma",
+    ],
+    credentials: true,
   })
 );
 
