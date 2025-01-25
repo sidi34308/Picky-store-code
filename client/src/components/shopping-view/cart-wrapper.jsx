@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
     const fetchAllProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/shop/products/get"
+          `${API_BASE_URL}/api/shop/products/get`
         );
         setAllProducts(response.data.data);
       } catch (error) {
