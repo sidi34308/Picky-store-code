@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+axios.defaults.withCredentials = true; // to allow axios send cookie data
 
 const initialState = {
   isLoading: false,
