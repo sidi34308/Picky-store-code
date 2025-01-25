@@ -27,7 +27,12 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.options("*", cors()); // Allow OPTIONS requests for all routes
+app.use(
+  cors({
+    origin: "https://picky-frontend.onrender.com", // Allow this specific origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Add allowed HTTP methods
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
