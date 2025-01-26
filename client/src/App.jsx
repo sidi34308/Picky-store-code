@@ -24,6 +24,8 @@ import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetails from "./pages/shopping-view/ProductDetails";
 import SuccessPage from "./pages/shopping-view/SuccessPage";
+import logo from "./assets/logo.svg";
+
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
@@ -36,9 +38,8 @@ function App() {
 
   if (isLoading)
     return (
-      <div className="w-full flex justify-center items-center h-full">
-        {" "}
-        <img src="/Loading.svg" />
+      <div className="w-full flex justify-center items-center h-screen">
+        <img src={logo} className="animate-pulse" />
       </div>
     );
 

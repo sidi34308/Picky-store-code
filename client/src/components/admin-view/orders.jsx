@@ -80,12 +80,14 @@ function AdminOrdersView() {
                           ? "bg-green-500 text-white"
                           : orderItem?.orderStatus === "rejected"
                           ? "bg-red-600 text-white"
-                          : orderItem?.orderStatus === "pending"
+                          : orderItem?.orderStatus === ""
                           ? "bg-yellow-500 text-white"
                           : "bg-gray-500 text-white"
                       }`}
                     >
-                      {orderItem?.orderStatus}
+                      {orderItem?.orderStatus
+                        ? "Order " + orderItem?.orderStatus
+                        : "Order Pending"}
                     </Badge>
                   </TableCell>
                   <TableCell>{orderItem?.totalAmount} QR</TableCell>

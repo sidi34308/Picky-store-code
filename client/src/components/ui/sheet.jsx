@@ -43,7 +43,7 @@ SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
  * Variants for the sheet position and animations.
  */
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out",
+  "fixed z-50 gap-4 bg-background p-6  transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out",
   {
     variants: {
       side: {

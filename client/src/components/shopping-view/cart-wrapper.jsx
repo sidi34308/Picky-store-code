@@ -52,18 +52,20 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
             />
           ))
         ) : (
-          <p>سلة المشتريات فارغة</p>
+          <p className="text-right text-black/50">سلة المشتريات فارغة</p>
         )}
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
-          <span>المجموع الكلي</span>
-          <span>{totalCartAmount} ريال</span>
+      {cartItems && cartItems.length > 0 && (
+        <div className="mt-8 space-y-4">
+          <div className="flex justify-between">
+            <span>المجموع الكلي</span>
+            <span>{totalCartAmount} ريال</span>
+          </div>
+          <Button onClick={() => navigate("/checkout")} className="w-full">
+            إتمام الشراء
+          </Button>
         </div>
-        <Button onClick={() => navigate("/checkout")} className="w-full">
-          إتمام الشراء
-        </Button>
-      </div>
+      )}
     </SheetContent>
   );
 }

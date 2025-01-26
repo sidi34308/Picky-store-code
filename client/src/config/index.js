@@ -109,21 +109,21 @@ export const shoppingViewHeaderMenuItems = [
     label: "جميع الأقسام",
     path: "/listing",
     submenu: [
-      { id: "men", label: "رجال", path: "/shop/listing" },
-      { id: "women", label: "نساء", path: "/shop/listing" },
-      { id: "kids", label: "أطفال", path: "/shop/listing" },
+      { id: "men", label: "رجال", path: "/listing?category=men" },
+      { id: "women", label: "نساء", path: "/listing?category=women" },
+      { id: "kids", label: "أطفال", path: "/listing?category=kids" },
     ],
   },
 
   {
     id: "groups",
     label: "المجموعات",
-    path: "/shop/listing",
+    path: "/listing?category=groups",
   },
   {
     id: "offers",
     label: "العروض",
-    path: "/shop/listing",
+    path: "/listing?category=offers",
   },
   {
     id: "about",

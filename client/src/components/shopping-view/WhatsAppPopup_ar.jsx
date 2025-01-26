@@ -42,7 +42,7 @@ function WhatsAppPopup_ar() {
             </button>
           </div>
           <a
-            href="https://wa.me/97466992910"
+            href="https://wa.me/97466762673"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-block hover:bg-white bg-gray-50 text-green-500 px-4 py-2 w-full rounded-2xl"

@@ -101,3 +101,20 @@ body {
 .product-image-slider .slick-slide {
   padding: 0 10px;
 }
+.sheet-enter {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sheet-enter-active {
+  transform: translateX(0);
+}
+
+.sheet-exit {
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sheet-exit-active {
+  transform: translateX(-100%);
+}

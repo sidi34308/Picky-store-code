@@ -23,43 +23,39 @@ function ProductDetails() {
   const [currentImage, setCurrentImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const sliderRef = React.useRef(null);
-
   const handleAddToCart = (getCurrentProductId, getTotalStock) => {
-    let getCartItems = cartItems.items || [];
+    const getCartItems = cartItems.items || [];
 
-    if (getCartItems.length) {
-      const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
-      );
-      if (indexOfCurrentItem > -1) {
-        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
-        if (getQuantity + quantity > getTotalStock) {
-          toast({
-            title: `فقط ${
-              getTotalStock - getQuantity
-            } كمية يمكن إضافتها لهذا المنتج`,
-            variant: "destructive",
-          });
+    // Calculate the total quantity in cart for this product
+    const currentCartItem = getCartItems.find(
+      (item) => item.productId === getCurrentProductId
+    );
+    const currentCartQuantity = currentCartItem ? currentCartItem.quantity : 0;
 
-          return;
-        }
-      }
+    // Validate if adding the quantity exceeds the stock
+    if (currentCartQuantity + quantity > getTotalStock) {
+      toast({
+        title: `فقط ${
+          getTotalStock - currentCartQuantity
+        } كمية يمكن إضافتها لهذا المنتج`,
+        variant: "destructive",
+      });
+      return;
     }
+
+    // Dispatch the action if stock is sufficient
     dispatch(
       addToCart({
         productId: getCurrentProductId,
         quantity: quantity,
       })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchCartItems());
-        toast({
-          title: "تمت إضافة المنتج إلى السلة",
-        });
-      }
+    ).then(() => {
+      dispatch(fetchCartItems());
+      toast({
+        title: "تمت إضافة المنتج إلى السلة",
+      });
     });
   };
-
   useEffect(() => {
     if (productId) {
       dispatch(fetchProductDetails(productId));
@@ -88,7 +84,7 @@ function ProductDetails() {
     const { className, style, onClick } = props;
     return (
       <div
-        className="  p-1 absolute top-1/2 z-10 left-0 transform -translate-y-1/2 rounded-full cursor-pointer"
+        className="  p-1 absolute top-1/2 z-10 left-0 transform -translate-y-1/2 rounded-full cursor-pointer hover:bg-accent"
         onClick={onClick}
       >
         <ArrowLeft className="w-6 h-6 text-primary" />
@@ -200,7 +196,14 @@ function ProductDetails() {
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
                 {productDetails.title}
               </h1>
-
+              <div className="flex items-center space-x-2">
+                <span className="text-xl font-bold text-black m-2">
+                  الكمية المتوفرة:
+                </span>
+                <span className="text-xl bg-gray-200 m-3 rounded-md text-gray-900 font-bold p-2">
+                  {productDetails.totalStock}
+                </span>
+              </div>
               <p className="text-gray-600 text-lg mb-6 leading-relaxed">
                 {productDetails.description}
               </p>
@@ -224,14 +227,7 @@ function ProductDetails() {
                   </button>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-black m-2">
-                  الكمية المتوفرة:
-                </span>
-                <span className="text-xl bg-gray-200 m-3 rounded-md text-gray-900 font-bold p-2">
-                  {productDetails.totalStock}
-                </span>
-              </div>
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

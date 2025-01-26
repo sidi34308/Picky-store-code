@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
+
 import {
   Airplay,
   BabyIcon,
@@ -36,12 +34,14 @@ import image2 from "../../assets/slider/2.png";
 import image3 from "../../assets/slider/3.png";
 import WhatsAppPopup_ar from "@/components/shopping-view/WhatsAppPopup_ar";
 
+import men from "../../assets/men.png";
+import woman from "../../assets/woman.png";
+import kids from "../../assets/kids.png";
+
 const categoriesWithIcon = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightning },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
+  { id: "men", label: "رجال", image: men, link: "/listing?category=men" },
+  { id: "women", label: "نساء", image: woman, link: "/listing?category=women" },
+  { id: "kids", label: "الطفال", image: kids, link: "/listing?category=kids" },
 ];
 
 const featureImageList = [
@@ -79,7 +79,7 @@ function ShoppingHome() {
     };
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate(`/shop/listing`);
+    navigate(`/listing`);
   }
 
   function handleGetProductDetails(getCurrentProductId) {
@@ -136,11 +136,6 @@ function ShoppingHome() {
       style={{ direction: "rtl" }}
     >
       <WhatsAppPopup_ar />
-      {/* <div className="w-full sm:h-[400px] h-[200px] flex items-center justify-center ">
-        <h1 className="sm:text-7xl text-4xl font-bold text-center py-10 ">
-          مكانك المعتمد للمنتجات الصحية! ✨
-        </h1>
-      </div> */}
       <div className="relative w-[90vw] h-[30vh] md:h-[600px] md:w-[95vw] overflow-hidden m-8 p-1 rounded-lg nav-shadow">
         {featureImageList && featureImageList.length > 0 ? (
           featureImageList.map((slide, index) => (
@@ -209,6 +204,35 @@ function ShoppingHome() {
           </div>
         </div>
       </section>
+      <section className="w-full">
+        <div className="container mx-auto px-4 w-full ">
+          <h2 className="text-3xl font-semibold text-[#E73983] mb-8">
+            الأقسام
+          </h2>
+          <div className="flex flex-col sm:flex-row w-full gap-4 cursor-pointer">
+            {categoriesWithIcon.map((category) => (
+              <div
+                key={category.id}
+                className="relative flex flex-col w-full sm:w-1/2 h-[400px] rounded-lg items-center justify-center transition-transform duration-300 ease-in-out transform hover:scale-105"
+                onClick={() =>
+                  handleNavigateToListingPage(category, "category")
+                }
+              >
+                <img
+                  src={category.image}
+                  alt={category.label}
+                  className="w-full h-full object-cover rounded-md"
+                />
+                <div className="absolute inset-0 bg-black opacity-20 rounded-md"></div>
+                <CardContent className="absolute text-center text-white text-3xl font-bold mt-4">
+                  {category.label}
+                </CardContent>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}

@@ -1,3 +1,26 @@
+import React, { useEffect, useState } from "react";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { shoppingViewHeaderMenuItems } from "@/config";
+import { fetchCartItems } from "@/store/shop/cart-slice";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import UserCartWrapper from "./cart-wrapper";
 import {
   HousePlug,
   LogOut,
@@ -11,32 +34,6 @@ import {
 import logo from "../../assets/logo.svg";
 import cart from "../../assets/cart.svg";
 import search from "../../assets/search.svg";
-
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { useDispatch, useSelector } from "react-redux";
-import { shoppingViewHeaderMenuItems } from "@/config";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-// import { logoutUser } from "@/store/auth-slice";
-import UserCartWrapper from "./cart-wrapper";
-import { useEffect, useState } from "react";
-import { fetchCartItems } from "@/store/shop/cart-slice";
-import { Label } from "../ui/label";
 
 function MenuItems() {
   const navigate = useNavigate();
@@ -59,11 +56,18 @@ function MenuItems() {
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
-    location.pathname.includes("listing") && currentFilter !== null
-      ? setSearchParams(
-          new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
-        )
-      : navigate(getCurrentMenuItem.path);
+    if (location.pathname === "/" && getCurrentMenuItem.id === "home") {
+      navigate("/");
+    } else if (
+      location.pathname.includes("listing") &&
+      currentFilter !== null
+    ) {
+      setSearchParams(
+        new URLSearchParams(`?category=${getCurrentMenuItem.id}`)
+      );
+    } else {
+      navigate(getCurrentMenuItem.path);
+    }
   }
 
   return (
@@ -87,7 +91,7 @@ function MenuItems() {
 
           {/* Dropdown Menu */}
           {menuItem.submenu && hoveredMenuItem === menuItem.id && (
-            <div className="absolute top-full right-0 bg-white nav-shadow rounded-sm mt-1 z-10">
+            <div className="hidden lg:block absolute top-full right-0 bg-white nav-shadow rounded-sm mt-1 z-10">
               {menuItem.submenu.map((subItem) => (
                 <div
                   key={subItem.id}
@@ -152,35 +156,64 @@ function HeaderRightContent() {
 
 function ShoppingHeader() {
   // const { isAuthenticated } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const [openCartSheet, setOpenCartSheet] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(logoutUser());
+  }
+
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
   return (
-    <header className="sticky border-none  top-0 z-40 w-full border-b bg-background">
-      {/* <div className="bg-primary w-full h-4"></div> */}
+    <header className="sticky border-none top-0 z-40 w-full border-b bg-background">
       <div className="flex h-20 items-center justify-between px-4 md:px-20">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="picky Ecommerce Logo" className="h-18 w-18" />
         </Link>
-
-        <Sheet>
-          <Link to="/search" className="block lg:hidden  items-center gap-2">
-            <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
-          </Link>
-
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle header menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-full max-w-xs">
-            <MenuItems />
-          </SheetContent>
-        </Sheet>
-        <div className="hidden lg:block">
-          <MenuItems />
+        <div className="flex items-center gap-4">
+          <Sheet
+            open={openCartSheet}
+            onOpenChange={() => setOpenCartSheet(false)}
+          >
+            <button
+              onClick={() => setOpenCartSheet(true)}
+              variant="outline"
+              size="icon"
+              className="relative ring-0 lg:hidden"
+            >
+              <ShoppingBasket className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
+              <span className="absolute top-[0px] right-[-8px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItems?.length || 0}
+              </span>
+              <span className="sr-only">User cart</span>
+            </button>
+            <UserCartWrapper
+              setOpenCartSheet={setOpenCartSheet}
+              cartItems={cartItems && cartItems.length > 0 ? cartItems : []}
+            />
+            <Link to="/search" className="flex items-center gap-2 lg:hidden">
+              <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
+            </Link>
+          </Sheet>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="lg:hidden">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Toggle header menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-full max-w-xs">
+              <MenuItems />
+            </SheetContent>
+          </Sheet>
         </div>
-
-        <div className="hidden lg:block">
+        <div className="hidden lg:flex lg:items-center lg:gap-4">
+          <MenuItems />
           <HeaderRightContent />
         </div>
       </div>

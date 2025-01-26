@@ -145,9 +145,7 @@ function ShoppingListing() {
         <div className="p-4 flex items-center justify-between">
           <h2 className="text-lg font-bold">جميع المنتجات</h2>
           <div className="flex items-center gap-3">
-            <span className="text-[#86359b94]">
-              {productList?.length} نتائج
-            </span>
+            <span className="text-primary/40">{productList?.length} نتائج</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
