@@ -41,7 +41,7 @@ import kids from "../../assets/kids.png";
 const categoriesWithIcon = [
   { id: "men", label: "رجال", image: men, link: "/listing?category=men" },
   { id: "women", label: "نساء", image: woman, link: "/listing?category=women" },
-  { id: "kids", label: "الطفال", image: kids, link: "/listing?category=kids" },
+  { id: "kids", label: "أطفال", image: kids, link: "/listing?category=kids" },
 ];
 
 const featureImageList = [
