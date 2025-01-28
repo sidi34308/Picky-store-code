@@ -181,13 +181,12 @@ function ShoppingHome() {
           <ChevronRightIcon className="w-4 h-4 text-gray-700" />
         </Button>
       </div>
-
       <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
         العروض
       </h2>
       <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex overflow gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mx-auto w-[100vw] ">
+          <div className="flex overflow-auto gap-6 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {productList && productList.length > 0
               ? productList
                   .filter((productItem) => productItem.salePrice)
@@ -195,7 +194,7 @@ function ShoppingHome() {
                   .map((productItem) => (
                     <div
                       key={productItem.id}
-                      className="flex-shrink-0 w-64 md:w-auto"
+                      className="flex-shrink-0 w-64 snap-start md:w-auto"
                     >
                       <ShoppingProductTile
                         handleGetProductDetails={handleGetProductDetails}
@@ -208,6 +207,7 @@ function ShoppingHome() {
           </div>
         </div>
       </section>
+
       <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
         الأقسام
       </h2>

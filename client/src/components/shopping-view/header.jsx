@@ -207,7 +207,7 @@ function ShoppingHeader() {
                 <span className="sr-only">Toggle header menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-full max-w-xs">
+            <SheetContent side="right" className="w-full max-w-xs">
               <MenuItems />
             </SheetContent>
           </Sheet>

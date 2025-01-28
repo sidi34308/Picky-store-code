@@ -143,7 +143,7 @@ function ShoppingCheckout() {
 
   return (
     <div
-      className="min-w-full flex flex-col gap-6 px-20 py-10"
+      className="min-w-full flex flex-col gap-6  px-10 sm:px-20 py-10"
       style={{ direction: "rtl" }}
     >
       <div className="flex items-center gap-2 justify-end">
@@ -154,7 +154,7 @@ function ShoppingCheckout() {
           <ArrowLeft className="w-6 h-6 text-primary" />
         </button>
       </div>
-      <h2 className="text-2xl font-bold mb-5 text-black">
+      <h2 className="text-xl font-bold mb-5 text-black">
         املأ البيانات أدناه وسنقوم بالتواصل معك في أقرب وقت لتأكيد الطلب وتوصيله
         إلى بابك.
       </h2>
