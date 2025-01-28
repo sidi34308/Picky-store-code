@@ -186,7 +186,7 @@ function ShoppingHome() {
       </h2>
       <section className="py-12">
         <div className="mx-auto w-[100vw] ">
-          <div className="flex overflow-auto gap-6 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="flex overflow gap-6 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {productList && productList.length > 0
               ? productList
                   .filter((productItem) => productItem.salePrice)
