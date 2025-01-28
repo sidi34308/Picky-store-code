@@ -36,12 +36,12 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading)
-    return (
-      <div className="w-full flex justify-center items-center h-screen">
-        <img src={logo} className="animate-pulse" />
-      </div>
-    );
+  // if (isLoading)
+  //   return (
+  //     <div className="w-full flex justify-center items-center h-screen">
+  //       <img src={logo} className="animate-pulse" />
+  //     </div>
+  //   );
 
   console.log(isLoading, user, "ssssssssss");
 
