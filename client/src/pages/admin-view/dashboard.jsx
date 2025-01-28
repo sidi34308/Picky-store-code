@@ -49,6 +49,7 @@ function AdminDashboard() {
           ? featureImageList.map((featureImgItem) => (
               <div className="relative">
                 <img
+                  loading="lazy"
                   src={featureImgItem.image}
                   className="w-full h-[300px] object-cover rounded-t-lg"
                 />

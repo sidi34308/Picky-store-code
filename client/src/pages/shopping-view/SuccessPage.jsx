@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Done from "../../assets/done.png";
 
 const SuccessPage = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const SuccessPage = () => {
       <p className="text-base md:text-lg mb-6 text-center">
         شكراً لتسوقك معنا. سنتواصل معك قريباً لتأكيد الطلب وتوصيله.
       </p>
-      <img src="/src/assets/done.png" className="m-10 w-10 sm:w-10 " />
+      <img loading="lazy" src={Done} className="m-10 w-10 sm:w-10 " />
       <button
         onClick={() => navigate("/")}
         className="bg-primary text-white hover:bg-primary/80 rounded-md py-2 px-4"

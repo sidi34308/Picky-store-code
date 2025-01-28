@@ -86,7 +86,7 @@ function SearchProducts() {
 
   return (
     <div
-      className="container h-screen mx-auto md:px-6 px-4 py-8"
+      className="container  mx-auto md:px-6 px-4 py-8"
       style={{ direction: "rtl" }}
     >
       <div className="flex justify-center mb-10 ">
@@ -126,7 +126,7 @@ function SearchProducts() {
             </h1>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {searchResults.map((item) => (
+              {searchResults.slice(0, 4).map((item) => (
                 <ShoppingProductTile
                   key={item.id}
                   handleAddtoCart={handleAddtoCart}
@@ -141,14 +141,16 @@ function SearchProducts() {
       <h3 className="text-lg font-medium">تسوق ايضاً</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {productList && productList.length > 0
-          ? productList.map((productItem) => (
-              <ShoppingProductTile
-                key={productItem.id}
-                handleGetProductDetails={handleGetProductDetails}
-                product={productItem}
-                handleAddtoCart={handleAddtoCart}
-              />
-            ))
+          ? productList
+              .slice(0, 4)
+              .map((productItem) => (
+                <ShoppingProductTile
+                  key={productItem.id}
+                  handleGetProductDetails={handleGetProductDetails}
+                  product={productItem}
+                  handleAddtoCart={handleAddtoCart}
+                />
+              ))
           : null}
       </div>
     </div>

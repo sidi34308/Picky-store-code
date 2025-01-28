@@ -260,6 +260,7 @@ function ProductImageUpload({
               >
                 <div className="flex items-center space-x-3 mb-2">
                   <img
+                    loading="lazy"
                     src={imagePreviews[index]}
                     alt={`Preview ${index}`}
                     className="w-16 h-16 object-cover rounded"

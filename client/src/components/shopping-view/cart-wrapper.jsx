@@ -59,7 +59,9 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
         <div className="mt-8 space-y-4">
           <div className="flex justify-between">
             <span>المجموع الكلي</span>
-            <span>{totalCartAmount} ريال</span>
+            <span className="font-bold text-black text-xl">
+              {totalCartAmount} ريال
+            </span>
           </div>
           <Button onClick={() => navigate("/checkout")} className="w-full">
             إتمام الشراء

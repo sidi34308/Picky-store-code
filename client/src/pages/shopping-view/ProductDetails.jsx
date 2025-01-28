@@ -172,6 +172,7 @@ function ProductDetails() {
                   } rounded-md overflow-hidden`}
                 >
                   <img
+                    loading="lazy"
                     src={image}
                     alt={`${productDetails.title} - Thumbnail ${index + 1}`}
                     className="w-full h-full object-cover"

@@ -69,12 +69,15 @@ function UserCartItemsContent({ cartItem, allProducts }) {
   return (
     <div className="flex items-center gap-4 p-4 border-b last:border-none">
       <img
+        loading="lazy"
         src={product?.images[0]}
         alt={product?.title}
         className="w-20 h-20 rounded-md object-cover"
       />
       <div className="flex-1">
-        <h3 className="font-bold text-lg mb-1">{product?.title}</h3>
+        <h3 className="font-semibold text-black text-lg mb-1">
+          {product?.title}
+        </h3>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -101,7 +104,7 @@ function UserCartItemsContent({ cartItem, allProducts }) {
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="text-lg font-bold text-gray-900">
+        <p className="text-lg font-medium text-gray-900">
           {" ر.ق "}
           {(
             (product?.salePrice > 0 ? product?.salePrice : product?.price) *

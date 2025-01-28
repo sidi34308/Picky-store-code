@@ -15,6 +15,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
       <Link to={`/product/${product._id}`}>
         <div className="relative">
           <img
+            loading="lazy"
             src={product?.images?.[0]}
             alt={product?.title}
             className="w-full h-[250px] object-cover rounded-3xl"
@@ -37,7 +38,9 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
           ) : null}
         </div>
         <CardContent className="p-4">
-          <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
+          <h2 className="text-xl font-semibold text-primary mb-2">
+            {product?.title}
+          </h2>
 
           <div className="flex gap-3 items-center mb-2">
             {product?.salePrice > 0 ? (

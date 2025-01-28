@@ -49,14 +49,7 @@ const featureImageList = [
   { image: image2 },
   { image: image3 },
 ];
-const brandsWithIcon = [
-  { id: "nike", label: "Nike", icon: Shirt },
-  { id: "adidas", label: "Adidas", icon: WashingMachine },
-  { id: "puma", label: "Puma", icon: ShoppingBasket },
-  { id: "levi", label: "Levi's", icon: Airplay },
-  { id: "zara", label: "Zara", icon: Images },
-  { id: "h&m", label: "H&M", icon: Heater },
-];
+
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { productList, productDetails } = useSelector(
@@ -140,6 +133,7 @@ function ShoppingHome() {
         {featureImageList && featureImageList.length > 0 ? (
           featureImageList.map((slide, index) => (
             <img
+              loading="lazy"
               src={slide.image}
               key={index}
               alt={`Feature slide ${index + 1}`}
@@ -188,27 +182,37 @@ function ShoppingHome() {
         </Button>
       </div>
 
+      <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
+        العروض
+      </h2>
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-semibold text-[#E73983] mb-8">العروض</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="flex overflow gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {productList && productList.length > 0
-              ? productList.map((productItem) => (
-                  <ShoppingProductTile
-                    handleGetProductDetails={handleGetProductDetails}
-                    product={productItem}
-                    handleAddtoCart={handleAddtoCart}
-                  />
-                ))
+              ? productList
+                  .filter((productItem) => productItem.salePrice)
+                  .slice(0, 4)
+                  .map((productItem) => (
+                    <div
+                      key={productItem.id}
+                      className="flex-shrink-0 w-64 md:w-auto"
+                    >
+                      <ShoppingProductTile
+                        handleGetProductDetails={handleGetProductDetails}
+                        product={productItem}
+                        handleAddtoCart={handleAddtoCart}
+                      />
+                    </div>
+                  ))
               : null}
           </div>
         </div>
       </section>
+      <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
+        الأقسام
+      </h2>
       <section className="w-full">
         <div className="container mx-auto px-4 w-full ">
-          <h2 className="text-3xl font-semibold text-[#E73983] mb-8">
-            الأقسام
-          </h2>
           <div className="flex flex-col sm:flex-row w-full gap-4 cursor-pointer">
             {categoriesWithIcon.map((category) => (
               <div
@@ -219,6 +223,7 @@ function ShoppingHome() {
                 }
               >
                 <img
+                  loading="lazy"
                   src={category.image}
                   alt={category.label}
                   className="w-full h-full object-cover rounded-md"
