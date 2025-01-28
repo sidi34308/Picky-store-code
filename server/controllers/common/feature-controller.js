@@ -100,7 +100,7 @@ async function sendOrderEmail(req, res) {
 
   const mailOptions = {
     from: "pickystoremail@gmail.com", // This must match the authenticated user
-    to: "sidi34308s@gmail.com", // Default email if no recipient is specified
+    to: "Rustom3@hotmail.com",
     subject: "New Order Received",
     html: emailHTML,
   };
