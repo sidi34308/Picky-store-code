@@ -185,8 +185,8 @@ function ShoppingHome() {
         العروض
       </h2>
       <section className="py-12">
-        <div className="mx-auto w-[100vw] ">
-          <div className="flex overflow gap-6 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mx-auto  ">
+          <div className="flex flex-col gap-1  xl:flex-row xl:gap-6">
             {productList && productList.length > 0
               ? productList
                   .filter((productItem) => productItem.salePrice)
@@ -194,7 +194,7 @@ function ShoppingHome() {
                   .map((productItem) => (
                     <div
                       key={productItem.id}
-                      className="flex-shrink-0 w-64 snap-start md:w-auto"
+                      className="flex-shrink-0 w-full snap-start md:w-auto"
                     >
                       <ShoppingProductTile
                         handleGetProductDetails={handleGetProductDetails}

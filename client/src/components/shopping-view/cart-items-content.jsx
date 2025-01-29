@@ -61,7 +61,6 @@ function UserCartItemsContent({ cartItem, allProducts }) {
     dispatch(deleteCartItem({ productId: getCartItem?.productId })).then(() => {
       toast({
         title: "تم حذف عنصر السلة بنجاح",
-        variant: "success",
       });
     });
   };

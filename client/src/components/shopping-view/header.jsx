@@ -39,6 +39,7 @@ function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openCartSheet, setOpenCartSheet] = useState(false);
 
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const handleMouseEnter = (id) => setHoveredMenuItem(id);
