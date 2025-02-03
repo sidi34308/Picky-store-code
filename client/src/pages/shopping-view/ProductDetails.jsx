@@ -197,14 +197,12 @@ function ProductDetails() {
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
                 {productDetails.title}
               </h1>
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-black m-2">
-                  الكمية المتوفرة:
-                </span>
-                <span className="text-xl bg-gray-200 m-3 rounded-md text-gray-900 font-bold p-2">
-                  {productDetails.totalStock}
-                </span>
-              </div>
+
+              {productDetails.totalStock <= 5 && (
+                <div className="text-red-500 text-lg mb-6">
+                  فقط {productDetails.totalStock} عناصر متبقية في المخزون
+                </div>
+              )}
               <p className="text-gray-600 text-lg mb-6 leading-relaxed">
                 {productDetails.description}
               </p>

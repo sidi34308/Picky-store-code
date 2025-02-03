@@ -24,6 +24,7 @@ import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetails from "./pages/shopping-view/ProductDetails";
 import SuccessPage from "./pages/shopping-view/SuccessPage";
+import Aboutus from "./pages/shopping-view/Aboutus";
 import logo from "./assets/logo.svg";
 
 function App() {
@@ -69,13 +70,14 @@ function App() {
           <Route path="/product/:productId" element={<ProductDetails />} />
 
           <Route path="/" element={<ShoppingHome />} />
+          <Route path="/about" element={<Aboutus />} />
+
           <Route path="/listing" element={<ShoppingListing />} />
           {/* <Route path="account" element={<ShoppingAccount />} /> */}
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="/search" element={<SearchProducts />} />
         </Route>
-        <Route path="/Success" element={<SuccessPage />} />
 
         <Route path="/checkout" element={<ShoppingCheckout />} />
         {/* Other Routes */}

@@ -4,7 +4,7 @@ import { FaWhatsapp } from "react-icons/fa"; // Import FaTimes for the close ico
 import { X } from "lucide-react";
 function WhatsAppPopup_ar() {
   const [isVisible, setIsVisible] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
 
   const handleMinimize = () => {
     setIsMinimized(true);
