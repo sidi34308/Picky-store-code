@@ -34,7 +34,9 @@ import {
 import logo from "../../assets/logo.svg";
 import cart from "../../assets/cart.svg";
 import search from "../../assets/search.svg";
-
+import instagram from "../../assets/icons/instagram.svg"; // Adjust the path as necessary
+import facebook from "../../assets/icons/facebook.svg"; // Adjust the path as necessary
+import tiktok from "../../assets/icons/tiktok.svg"; // Adjust the path as necessary
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -210,6 +212,34 @@ function ShoppingHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs">
               <MenuItems />
+
+              {/* Social Media Section */}
+              <div className="flex gap-2 mt-4 lg:mt-0">
+                <a
+                  href="https://www.instagram.com/picky_qatar/" // Replace with actual Instagram link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                >
+                  <img src={instagram} alt="إنستغرام" className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.facebook.com/profile.php?id=61564280737976&mibextid=LQQJ4d" // Replace with actual Facebook link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                >
+                  <img src={facebook} alt="فيسبوك" className="w-6 h-6" />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@picky_qa?_t=8qX065pQrvm&_r=1" // Replace with actual TikTok link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                >
+                  <img src={tiktok} alt="تيك توك" className="w-6 h-6" />
+                </a>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

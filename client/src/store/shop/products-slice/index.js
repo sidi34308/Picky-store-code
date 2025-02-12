@@ -3,6 +3,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true; // to allow axios send cookie data
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 console.log(API_BASE_URL, "API_BASE_URL");
+
 const initialState = {
   isLoading: false,
   productList: [],
@@ -23,7 +24,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       `${API_BASE_URL}/api/shop/products/get?${query}`
     );
 
-    console.log("all product", result.data);
+    console.log(" filter filterParams", filterParams);
 
     return result?.data;
   }

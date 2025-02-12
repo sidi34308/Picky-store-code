@@ -1,5 +1,7 @@
 const Feature = require("../../models/Feature");
+const Order = require("../../models/Order");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const addFeatureImage = async (req, res) => {
   try {
@@ -46,6 +48,9 @@ const getFeatureImages = async (req, res) => {
 async function sendOrderEmail(req, res) {
   const { to, subject, orderDetails } = req.body;
 
+  // Generate a unique order ID
+  const orderId = `ORD-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
+
   // Create the HTML table for the order details
   const orderTableRows = orderDetails.cartItems
     .map(
@@ -78,15 +83,29 @@ async function sendOrderEmail(req, res) {
     ).toLocaleString()}</p>
   `;
 
-  const emailHTML = `
+  const adminEmailHTML = `
     <h3>تفاصيل الطلب الجديد</h3>
+    <p><strong>رقم الطلب:</strong> ${orderId}</p>
     <p><strong>اسم العميل:</strong> ${orderDetails.fullName}</p>
+    <p><strong>تاريخ الميلاد:</strong> ${new Date(
+      orderDetails.birthDate
+    ).toLocaleDateString()}</p>
     <p><strong>رقم الهاتف:</strong> ${orderDetails.phone}</p>
     <p><strong>العنوان:</strong> ${orderDetails.address}, ${
     orderDetails.region
   }</p>
     <p><strong>ملاحظات:</strong> ${orderDetails.notes || "لا توجد ملاحظات"}</p>
     ${orderTableHTML}
+  `;
+
+  const userEmailHTML = `
+    <h3>شكراً لطلبك من متجرنا</h3>
+    <p>عزيزي ${orderDetails.fullName},</p>
+    <p>نشكرك على طلبك. فيما يلي تفاصيل طلبك:</p>
+    <p><strong>رقم الطلب:</strong> ${orderId}</p>
+    ${orderTableHTML}
+    <p>سنتواصل معك قريباً لتأكيد الطلب وتوصيله إلى بابك.</p>
+    <p>شكراً لتسوقك معنا!</p>
   `;
 
   const transporter = nodemailer.createTransport({
@@ -98,23 +117,44 @@ async function sendOrderEmail(req, res) {
     },
   });
 
-  const mailOptions = {
+  const adminMailOptions = {
     from: "pickystoremail@gmail.com", // This must match the authenticated user
-    to: "Rustom3@hotmail.com",
+    // to: "Rustom3@hotmail.com",
+    to: "sidi34308s@gmail.com",
     subject: "New Order Received",
-    html: emailHTML,
+    html: adminEmailHTML,
+  };
+
+  const userMailOptions = {
+    from: "pickystoremail@gmail.com",
+    to: orderDetails.email,
+    subject: "تفاصيل طلبك من متجرنا",
+    html: userEmailHTML,
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info.response);
+    const adminInfo = await transporter.sendMail(adminMailOptions);
+    console.log("Admin email sent successfully:", adminInfo.response);
 
-    res
-      .status(200)
-      .json({ success: true, message: "Email sent successfully!" });
+    const userInfo = await transporter.sendMail(userMailOptions);
+    console.log("User email sent successfully:", userInfo.response);
+
+    // Save the order with the generated order ID
+    const newOrder = new Order({
+      orderId,
+      ...orderDetails,
+      orderDate: new Date(),
+    });
+    await newOrder.save();
+
+    console.log("new order", newOrder);
+    res.status(200).json({
+      success: true,
+      message: "Emails sent and order created successfully!",
+    });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).json({ success: false, error: "Email not sent" });
+    res.status(500).json({ success: false, error: "Emails not sent" });
   }
 }
 

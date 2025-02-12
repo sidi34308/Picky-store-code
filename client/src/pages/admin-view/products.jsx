@@ -24,8 +24,8 @@ const initialFormData = {
   images: [],
   title: "",
   description: "",
-  category: "",
-  Labels: "",
+  category: [], // Change 'category' to be an array of strings
+  labels: "", // Ensure 'labels' is included
   group: false,
   price: "",
   salePrice: "",
@@ -53,7 +53,12 @@ function AdminProducts() {
       ? dispatch(
           editProduct({
             id: currentEditedId,
-            formData,
+            formData: {
+              ...formData,
+              images: uploadedImageUrls.length
+                ? uploadedImageUrls
+                : formData.images, // Ensure images are included
+            },
           })
         ).then((data) => {
           if (data?.payload?.success) {
@@ -66,7 +71,8 @@ function AdminProducts() {
       : dispatch(
           addNewProduct({
             ...formData,
-            images: uploadedImageUrls,
+            images: uploadedImageUrls, // Ensure images are included
+            labels: formData.labels, // Ensure 'labels' is included
           })
         ).then((data) => {
           if (data?.payload?.success) {
@@ -126,6 +132,8 @@ function AdminProducts() {
           setOpenCreateProductsDialog(false);
           setCurrentEditedId(null);
           setFormData(initialFormData);
+          setImageFiles([]);
+          setUploadedImageUrls([]);
         }}
       >
         <SheetContent side="right" className="overflow-auto  ">
@@ -142,6 +150,7 @@ function AdminProducts() {
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
             isEditMode={currentEditedId !== null}
+            existingImages={formData.images} // Pass existing images to the component
           />
           <div className="py-6">
             <CommonForm
@@ -149,7 +158,11 @@ function AdminProducts() {
               formData={formData}
               setFormData={setFormData}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
-              formControls={addProductFormElements}
+              formControls={addProductFormElements.map((element) =>
+                element.name === "category"
+                  ? { ...element, componentType: "multiselect" }
+                  : element
+              )}
               isBtnDisabled={!isFormValid()}
             />
           </div>

@@ -3,50 +3,46 @@ const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
 const createOrder = async (req, res) => {
-  try {
-    const {
-      fullName,
-      email,
-      age,
-      phone,
-      address,
-      region,
-      notes,
-      cartItems,
-      totalAmount,
-      orderDate,
-    } = req.body;
-    console.log(req.body);
-
-    const newlyCreatedOrder = new Order({
-      fullName,
-      email,
-      age,
-      phone,
-      address,
-      region,
-      notes,
-      cartItems,
-      totalAmount,
-      orderDate,
-    });
-
-    console.log(newlyCreatedOrder);
-
-    await newlyCreatedOrder.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Order created successfully",
-      orderId: newlyCreatedOrder._id,
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occurred!",
-    });
-  }
+  // try {
+  //   const {
+  //     fullName,
+  //     email,
+  //     age,
+  //     phone,
+  //     address,
+  //     region,
+  //     notes,
+  //     cartItems,
+  //     totalAmount,
+  //     orderDate,
+  //   } = req.body;
+  //   console.log(req.body);
+  //   const newlyCreatedOrder = new Order({
+  //     fullName,
+  //     email,
+  //     age,
+  //     phone,
+  //     address,
+  //     region,
+  //     notes,
+  //     cartItems,
+  //     totalAmount,
+  //     orderDate,
+  //   });
+  //   console.log(newlyCreatedOrder);
+  //   await newlyCreatedOrder.save();
+  //   res.status(201).json({
+  //     success: true,
+  //     message: "Order created successfully",
+  //     orderId: newlyCreatedOrder._id,
+  //   });
+  // } catch (e) {
+  //   console.log(e);
+  //   res.status(500).json({
+  //     success: false,
+  //     message: "Some error occurred!",
+  //   });
+  // }
 };
 
 const getAllOrdersByUser = async (req, res) => {

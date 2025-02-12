@@ -9,6 +9,7 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { MultiSelect } from "../ui/multi-select"; // Import MultiSelect component
 
 function CommonForm({
   formControls,
@@ -85,7 +86,21 @@ function CommonForm({
         );
 
         break;
+      case "multiselect": // Add case for MultiSelect
+        element = (
+          <MultiSelect
+            options={getControlItem.options}
+            value={formData[getControlItem.name] || []}
+            onChange={(selectedOptions) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: selectedOptions,
+              })
+            }
+          />
+        );
 
+        break;
       default:
         element = (
           <Input
@@ -114,6 +129,7 @@ function CommonForm({
         {formControls.map((controlItem) => (
           <div className="grid w-full gap-1.5" key={controlItem.name}>
             <Label className="mb-1">{controlItem.label}</Label>
+
             {renderInputsByComponentType(controlItem)}
           </div>
         ))}

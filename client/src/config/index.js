@@ -70,7 +70,7 @@ export const addProductFormElements = [
     name: "Labels",
     componentType: "select",
     options: [
-      { id: "weight ", label: "Weight Management" },
+      { id: "weight", label: "Weight Management" },
       { id: "skincare", label: "Skincare" },
       { id: "height", label: " Height Growth" },
     ],

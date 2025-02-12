@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
+  orderId: { type: String, unique: true }, // Add orderId field
   fullName: String,
   email: String,
   age: Number,
+  birthDate: Date,
   phone: String,
   address: String,
   region: String,

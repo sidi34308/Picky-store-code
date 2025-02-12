@@ -118,3 +118,56 @@ body {
 .sheet-exit-active {
   transform: translateX(-100%);
 }
+/* Customize DatePicker */
+.MuiOutlinedInput-root {
+  font-family: "Alexandria", "inter";
+
+  border-radius: 0.5rem !important;
+  background-color: white !important;
+}
+
+.MuiOutlinedInput-input {
+  padding: 12px 14px !important;
+  font-family: "Alexandria", sans-serif !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #d1d5db !important; /* Gray border */
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #441c93 !important; /* Blue border on focus */
+  border-width: 2px !important;
+}
+
+.MuiInputLabel-root {
+  font-family: "Alexandria", sans-serif !important;
+  color: #6b7280 !important; /* Gray text */
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: #46099b !important; /* Blue text on focus */
+}
+
+/* phone-input.css */
+.PhoneInput {
+  direction: ltr;
+  @apply w-full py-2 px-4 bg-white rounded-lg border border-gray-300 transition-all duration-200 
+         focus:ring-2 focus:ring-blue-500 focus:border-blue-500; /* Change to your preferred color */
+}
+
+.PhoneInputInput {
+  @apply w-full p-3 text-sm text-gray-700 placeholder-gray-400 bg-transparent border-none 
+         focus:outline-none focus:ring-0;
+}
+
+/* Customize the country select dropdown */
+.PhoneInputCountry {
+  @apply flex items-center gap-2 cursor-pointer;
+}
+
+/* Customize the flag icon */
+.PhoneInputCountryIcon {
+  width: 24px !important;
+  height: 16px !important;
+}

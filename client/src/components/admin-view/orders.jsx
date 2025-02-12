@@ -71,7 +71,7 @@ function AdminOrdersView() {
             {orderList && orderList.length > 0 ? (
               orderList.map((orderItem) => (
                 <TableRow key={orderItem._id}>
-                  <TableCell>{orderItem?._id}</TableCell>
+                  <TableCell>{orderItem?.orderId}</TableCell>
                   <TableCell>{formatDateTime(orderItem?.orderDate)}</TableCell>
                   <TableCell>
                     <Badge

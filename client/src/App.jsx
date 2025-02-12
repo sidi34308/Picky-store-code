@@ -80,6 +80,8 @@ function App() {
         </Route>
 
         <Route path="/checkout" element={<ShoppingCheckout />} />
+        <Route path="/Success" element={<SuccessPage />} />
+
         {/* Other Routes */}
 
         <Route path="*" element={<NotFound />} />

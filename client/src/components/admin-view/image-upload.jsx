@@ -1,127 +1,3 @@
-// import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
-// import { Input } from "../ui/input";
-// import { Label } from "../ui/label";
-// import { useEffect, useRef } from "react";
-// import { Button } from "../ui/button";
-// import axios from "axios";
-// import { Skeleton } from "../ui/skeleton";
-
-// function ProductImageUpload({
-//   imageFile,
-//   setImageFile,
-//   imageLoadingState,
-//   uploadedImageUrls,
-//   setUploadedImageUrl,
-//   setImageLoadingState,
-//   isEditMode,
-//   isCustomStyling = false,
-// }) {
-//   const inputRef = useRef(null);
-
-//   console.log(isEditMode, "isEditMode");
-
-//   function handleImageFileChange(event) {
-//     console.log(event.target.files, "event.target.files");
-//     const selectedFile = event.target.files?.[0];
-//     console.log(selectedFile);
-
-//     if (selectedFile) setImageFile(selectedFile);
-//   }
-
-//   function handleDragOver(event) {
-//     event.preventDefault();
-//   }
-
-//   function handleDrop(event) {
-//     event.preventDefault();
-//     const droppedFile = event.dataTransfer.files?.[0];
-//     if (droppedFile) setImageFile(droppedFile);
-//   }
-
-//   function handleRemoveImage() {
-//     setImageFile(null);
-//     if (inputRef.current) {
-//       inputRef.current.value = "";
-//     }
-//   }
-
-//   async function uploadImageToCloudinary() {
-//     setImageLoadingState(true);
-//     const data = new FormData();
-//     data.append("my_file", imageFile);
-//     const response = await axios.post(
-//       "http://localhost:5000/api/admin/products/upload-image",
-//       data
-//     );
-//     console.log(response, "response");
-
-//     if (response?.data?.success) {
-//       setUploadedImageUrl(response.data.result.url);
-//       setImageLoadingState(false);
-//     }
-//   }
-
-//   useEffect(() => {
-//     if (imageFile !== null) uploadImageToCloudinary();
-//   }, [imageFile]);
-
-//   return (
-//     <div
-//       className={`w-full  mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
-//     >
-//       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
-//       <div
-//         onDragOver={handleDragOver}
-//         onDrop={handleDrop}
-//         className={`${
-//           isEditMode ? "opacity-60" : ""
-//         } border-2 border-dashed rounded-lg p-4`}
-//       >
-//         <Input
-//           id="image-upload"
-//           type="file"
-//           className="hidden"
-//           ref={inputRef}
-//           onChange={handleImageFileChange}
-//           disabled={isEditMode}
-//         />
-//         {!imageFile ? (
-//           <Label
-//             htmlFor="image-upload"
-//             className={`${
-//               isEditMode ? "cursor-not-allowed" : ""
-//             } flex flex-col items-center justify-center h-32 cursor-pointer`}
-//           >
-//             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-//             <span>Drag & drop or click to upload image</span>
-//           </Label>
-//         ) : imageLoadingState ? (
-//           <Skeleton className="h-10 bg-gray-100" />
-//         ) : (
-//           <div className="flex items-center justify-between">
-//             <div className="flex items-center">
-//               <FileIcon className="w-8 text-primary mr-2 h-8" />
-//             </div>
-//             <p className="text-sm font-medium">{imageFile.name}</p>
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="text-muted-foreground hover:text-foreground"
-//               onClick={handleRemoveImage}
-//             >
-//               <XIcon className="w-4 h-4" />
-//               <span className="sr-only">Remove File</span>
-//             </Button>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ProductImageUpload;import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
-// filepath: /c:/Users/hp/Documents/GitHub/mern-ecommerce-2024/client/src/components/admin-view/image-upload.jsx
-// filepath: /c:/Users/hp/Documents/GitHub/mern-ecommerce-2024/client/src/components/admin-view/image-upload.jsx
 import { FileIcon, UploadCloudIcon, XIcon, StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -139,10 +15,18 @@ function ProductImageUpload({
   setImageLoadingState,
   isEditMode,
   isCustomStyling = false,
+  existingImages = [], // Add existingImages prop
 }) {
   const inputRef = useRef(null);
   const [thumbnailIndex, setThumbnailIndex] = useState(0); // Default to the first image as the thumbnail
   const [imagePreviews, setImagePreviews] = useState([]);
+
+  useEffect(() => {
+    if (isEditMode && existingImages.length > 0) {
+      setImagePreviews(existingImages);
+      setUploadedImageUrls(existingImages);
+    }
+  }, [isEditMode, existingImages, setUploadedImageUrls]);
 
   function handleImageFileChange(event) {
     const selectedFiles = Array.from(event.target.files);
@@ -177,6 +61,11 @@ function ProductImageUpload({
     } else if (index < thumbnailIndex) {
       setThumbnailIndex((prevIndex) => prevIndex - 1);
     }
+
+    // Update uploadedImageUrls
+    const newUploadedImageUrls = [...uploadedImageUrls];
+    newUploadedImageUrls.splice(index, 1);
+    setUploadedImageUrls(newUploadedImageUrls);
   }
 
   function handleSetThumbnail(index) {
@@ -223,9 +112,7 @@ function ProductImageUpload({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className={`${
-          isEditMode ? "opacity-60" : ""
-        } border-2 border-dashed rounded-lg p-4`}
+        className={`border-2 border-dashed rounded-lg p-4`}
       >
         <Input
           id="image-upload"
@@ -233,14 +120,11 @@ function ProductImageUpload({
           className="hidden"
           ref={inputRef}
           onChange={handleImageFileChange}
-          disabled={isEditMode}
           multiple
         />
         <Label
           htmlFor="image-upload"
-          className={`${
-            isEditMode ? "cursor-not-allowed" : ""
-          } flex flex-col items-center justify-center h-32 cursor-pointer mb-4`}
+          className={`flex flex-col items-center justify-center h-32 cursor-pointer mb-4`}
         >
           <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
           <span>Drag & drop or click to upload images</span>
@@ -249,7 +133,7 @@ function ProductImageUpload({
           <Skeleton className="h-10 bg-gray-100" />
         ) : (
           <div>
-            {imageFiles.map((file, index) => (
+            {imagePreviews.map((preview, index) => (
               <div
                 key={index}
                 className={`border rounded-lg p-3 mb-3 ${
@@ -261,15 +145,13 @@ function ProductImageUpload({
                 <div className="flex items-center space-x-3 mb-2">
                   <img
                     loading="lazy"
-                    src={imagePreviews[index]}
+                    src={preview}
                     alt={`Preview ${index}`}
                     className="w-16 h-16 object-cover rounded"
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium truncate">
-                      {file.name.length > 15
-                        ? `${file.name.substring(0, 15)}...`
-                        : file.name}
+                      {imageFiles[index]?.name || `Image ${index + 1}`}
                     </p>
                     {index === thumbnailIndex && (
                       <StarIcon className="w-4 h-4 text-yellow-500" />

@@ -7,41 +7,61 @@ import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
 import { sendOrderEmail } from "@/lib/emailService";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import SuccessMessage from "./SuccessMessage";
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ShoppingCart, Plus, Minus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createNewOrder } from "@/store/shop/order-slice";
-import usePhoneValidation from "@/hooks/usePhoneValidation"; // Import the hook
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TextField } from "@mui/material";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import "./ShoppingCheckout.css"; // Import the CSS file
+
+// Define validation schema
+const schema = yup.object().shape({
+  fullName: yup.string().required("الاسم الكامل مطلوب"),
+  email: yup.string().email("البريد الإلكتروني غير صالح").optional(),
+  birthDate: yup.date().nullable(),
+  phone: yup.string().required("رقم الهاتف مطلوب"),
+  address: yup.string().optional(),
+  region: yup.string().required("اسم المنطقة مطلوب"),
+  notes: yup.string().optional(),
+});
 
 function ShoppingCheckout() {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const { cartItems } = useSelector((state) => state.shopCart);
   const { productList } = useSelector((state) => state.shopProducts);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    age: "",
-    phone: "",
-    address: "",
-    region: "",
-    notes: "",
-  });
-  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
-  const phoneValidation = usePhoneValidation(phone); // Use the hook
-
-  const handlePhoneChange = (value) => {
-    setPhone(value);
-  };
-
-  const [deliveryFee] = useState(25); // Fixed delivery fee
   const [totalAmount, setTotalAmount] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch cart items and products
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      birthDate: null,
+      phone: "",
+      address: "",
+      region: "",
+      notes: "",
+    },
+  });
+
+  const phone = watch("phone");
+
   useEffect(() => {
     dispatch(fetchCartItems());
     dispatch(
@@ -49,7 +69,6 @@ function ShoppingCheckout() {
     );
   }, [dispatch]);
 
-  // Calculate total amount based on cart and product data
   useEffect(() => {
     if (cartItems.length > 0 && productList.length > 0) {
       const cartDetails = cartItems.map((cartItem) => {
@@ -66,35 +85,29 @@ function ShoppingCheckout() {
         0
       );
 
-      setTotalAmount(calculatedTotal + deliveryFee);
+      setTotalAmount(calculatedTotal);
     }
-  }, [cartItems, productList, deliveryFee]);
+  }, [cartItems, productList]);
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-  const countryCodeLength = 4;
-  // Submit order
-  const handleSubmitOrder = async () => {
+  const calculateAge = (birthDate) => {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDifference = today.getMonth() - birthDateObj.getMonth();
     if (
-      !formData.fullName ||
-      !phone ||
-      !formData.region ||
-      phone.length <= countryCodeLength
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDateObj.getDate())
     ) {
-      toast({
-        title: "يرجى ملء جميع الحقول المطلوبة.",
-        variant: "destructive",
-      });
-      return;
+      age--;
     }
-    // Validate phone number
-    if (!phoneValidation.isValid) {
+    return age;
+  };
+
+  const onSubmit = async (data) => {
+    const age = calculateAge(data.birthDate);
+    if (age < 0) {
       toast({
-        title: "رقم الهاتف غير صالح.",
-        description: phoneValidation.errorMessage,
+        title: "تاريخ الميلاد غير صالح.",
         variant: "destructive",
       });
       return;
@@ -103,8 +116,9 @@ function ShoppingCheckout() {
     setIsSubmitting(true);
 
     const orderData = {
-      ...formData,
-      phone,
+      ...data,
+      age,
+      birthDate: data.birthDate, // Ensure birth date is included in the order data
       cartItems: cartItems.map((cartItem) => {
         const product = productList.find((p) => p._id === cartItem.productId);
         return {
@@ -121,14 +135,15 @@ function ShoppingCheckout() {
       }),
       totalAmount,
       orderDate: new Date().toISOString(),
+      orderId: `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`, // Generate a simple, unique order ID
     };
 
     try {
       await sendOrderEmail(orderData);
-      await dispatch(createNewOrder(orderData)).unwrap();
-      dispatch(clearCart()); // Clear the cart
+      // await dispatch(createNewOrder(orderData)).unwrap();
+      dispatch(clearCart());
       setShowSuccess(true);
-      navigate("/Success"); // Navigate to success page
+      navigate("/Success");
     } catch (error) {
       console.error("Error submitting order:", error);
       toast({
@@ -143,7 +158,7 @@ function ShoppingCheckout() {
 
   return (
     <div
-      className="min-w-full flex flex-col gap-6  px-10 sm:px-20 py-10"
+      className="min-w-full flex flex-col gap-6 px-10 sm:px-20 py-10 font-alexandria"
       style={{ direction: "rtl" }}
     >
       <div className="flex items-center gap-2 justify-end">
@@ -158,110 +173,175 @@ function ShoppingCheckout() {
         املأ البيانات أدناه وسنقوم بالتواصل معك في أقرب وقت لتأكيد الطلب وتوصيله
         إلى بابك.
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         <div className="space-y-4">
+          {/* Full Name Field */}
           <div>
             <label className="block mb-2 font-bold">
               الاسم الكامل <span className="text-red-600">*</span>
             </label>
-            <input
-              type="text"
+            <Controller
               name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="يرجى إدخال الاسم الكامل"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  fullWidth
+                  placeholder="يرجى إدخال الاسم الكامل"
+                  error={!!errors.fullName}
+                  helperText={errors.fullName?.message}
+                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              )}
             />
           </div>
+
+          {/* Email Field */}
           <div>
             <label className="block mb-2 font-bold">البريد الإلكتروني</label>
-            <input
-              type="email"
+            <Controller
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="يرجى إدخال البريد الإلكتروني"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="email"
+                  variant="outlined"
+                  fullWidth
+                  placeholder="يرجى إدخال البريد الإلكتروني"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              )}
             />
           </div>
+
+          {/* Birth Date Field */}
           <div>
-            <label className="block mb-2 font-bold">العمر</label>
-            <input
-              type="number"
-              name="age"
-              value={formData.age}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="يرجى إدخال العمر"
+            <label className="block mb-2 font-bold">تاريخ الميلاد</label>
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field }) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    {...field}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        fullWidth
+                        placeholder="يرجى اختيار تاريخ الميلاد"
+                        error={!!errors.birthDate}
+                        helperText={errors.birthDate?.message}
+                        className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              )}
             />
           </div>
+
+          {/* Phone Field */}
           <div>
             <label className="block mb-2 font-bold">
               رقم الهاتف <span className="text-red-600">*</span>
             </label>
-            <div className="" style={{ direction: "ltr" }}>
-              <PhoneInput
-                defaultCountry="qa"
-                value={phone}
-                onChange={handlePhoneChange}
-                className="custom-phone-input"
-                buttonClassName="custom-phone-input-button"
-                inputStyle={{
-                  border: "none",
-                  borderRadius: "10px",
-                  padding: "1rem",
-                  fontSize: "16px",
-                  width: "100%",
-                }}
-                buttonStyle={{
-                  border: "none",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: "8px 0 0 8px",
-                  padding: "10px",
-                }}
-              />
-              {!phoneValidation.isValid && (
-                <p className="text-red-600 mt-2">
-                  {phoneValidation.errorMessage}
-                </p>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <div className="relative">
+                  <PhoneInput
+                    {...field}
+                    international
+                    defaultCountry="QA"
+                    placeholder="يرجى إدخال رقم الهاتف"
+                    className="PhoneInput"
+                    inputClassName="PhoneInputInput"
+                  />
+                  {errors.phone && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </div>
               )}
-            </div>
-          </div>
-          <div>
-            <label className="block mb-2 font-bold">العنوان</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="يرجى إدخال العنوان"
             />
           </div>
+
+          {/* Address Field */}
+          <div>
+            <label className="block mb-2 font-bold">العنوان</label>
+            <Controller
+              name="address"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  fullWidth
+                  placeholder="يرجى إدخال العنوان"
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              )}
+            />
+          </div>
+
+          {/* Region Field */}
           <div>
             <label className="block mb-2 font-bold">
               اسم المنطقة <span className="text-red-600">*</span>
             </label>
-            <input
-              type="text"
+            <Controller
               name="region"
-              value={formData.region}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="يرجى إدخال اسم المنطقة"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  fullWidth
+                  placeholder="يرجى إدخال اسم المنطقة"
+                  error={!!errors.region}
+                  helperText={errors.region?.message}
+                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              )}
             />
           </div>
+
+          {/* Notes Field */}
           <div>
             <label className="block mb-2 font-bold">ملاحظات إضافية</label>
-            <textarea
+            <Controller
               name="notes"
-              value={formData.notes}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded-sm"
-              placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
+                  error={!!errors.notes}
+                  helperText={errors.notes?.message}
+                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                />
+              )}
             />
           </div>
         </div>
+
+        {/* Order Summary Section */}
         <div className="space-y-4">
           <h3 className="text-lg font-bold mb-4">ملخص الطلب</h3>
           <div className="mb-4">
@@ -279,9 +359,8 @@ function ShoppingCheckout() {
               <p className="text-gray-600">عربة التسوق فارغة.</p>
             )}
           </div>
-          <div className="flex justify-between mb-4 mt-10">
-            <span>رسوم التوصيل</span>
-            <span>{deliveryFee} ريال</span>
+          <div className="text-gray-600">
+            قد تنطبق رسوم توصيل إضافية حسب المنطقة
           </div>
           <div className="flex justify-between font-bold text-black">
             <span>المجموع</span>
@@ -295,7 +374,7 @@ function ShoppingCheckout() {
               تسوق المزيد
             </a>
             <Button
-              onClick={handleSubmitOrder}
+              type="submit"
               className="mt-6 flex-1 bg-pink-500 text-white hover:bg-pink-600"
               disabled={isSubmitting || cartItems.length === 0}
             >
@@ -308,7 +387,7 @@ function ShoppingCheckout() {
             onClose={() => setShowSuccess(false)}
           />
         </div>
-      </div>
+      </form>
     </div>
   );
 }
