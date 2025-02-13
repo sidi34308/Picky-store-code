@@ -24,7 +24,7 @@ import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetails from "./pages/shopping-view/ProductDetails";
 import SuccessPage from "./pages/shopping-view/SuccessPage";
-import Aboutus from "./pages/shopping-view/Aboutus";
+import Aboutus from "./pages/shopping-view/aboutus";
 import logo from "./assets/logo.svg";
 
 function App() {
