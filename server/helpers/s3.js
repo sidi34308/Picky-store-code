@@ -42,4 +42,27 @@ async function imageUploadUtil(files) {
   return Promise.all(uploadPromises);
 }
 
-module.exports = { upload, imageUploadUtil };
+async function uploadFeatureImage(file) {
+  if (!file) {
+    throw new Error("No file provided for upload.");
+  }
+
+  const fileExtension = file.mimetype.split("/")[1];
+  const key = `feature-images/${uuidv4()}.${fileExtension}`;
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ACL: "public-read",
+  };
+
+  const command = new PutObjectCommand(params);
+  await s3Client.send(command);
+
+  const publicUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+  return { url: publicUrl, key };
+}
+
+module.exports = { upload, imageUploadUtil, uploadFeatureImage };

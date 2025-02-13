@@ -29,8 +29,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    // origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
-    origin: "http://localhost:5173",
+    origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
+    // origin: "http://localhost:5173",
     allowedHeaders: [
       "Content-Type",
       "Authorization",

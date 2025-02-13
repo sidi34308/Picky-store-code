@@ -9,12 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
 const adminSidebarMenuItems = [
-  // {
-  //   id: "dashboard",
-  //   label: "Dashboard",
-  //   path: "/admin/dashboard",
-  //   icon: <LayoutDashboard />,
-  // },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    path: "/admin/dashboard",
+    icon: <LayoutDashboard />,
+  },
   {
     id: "products",
     label: "Products",

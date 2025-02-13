@@ -1,6 +1,7 @@
 const Product = require("../../models/Product");
 
-const { imageUploadUtil } = require("../../helpers/s3");
+const { imageUploadUtil, uploadFeatureImage } = require("../../helpers/s3");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 
 const handleImageUpload = async (req, res) => {
   try {
@@ -18,6 +19,65 @@ const handleImageUpload = async (req, res) => {
     });
   }
 };
+
+const handleFeatureImageUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file provided for upload.",
+      });
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png"];
+    if (!allowedTypes.includes(req.file.mimetype)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid file type. Only JPEG and PNG images are allowed.",
+      });
+    }
+
+    const result = await uploadFeatureImage(req.file);
+
+    res.json({
+      success: true,
+      url: result.url,
+      key: result.key,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error occurred during upload.",
+    });
+  }
+};
+
+const handleFeatureImageDelete = async (req, res) => {
+  try {
+    const { key } = req.body;
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    await s3Client.send(command);
+
+    res.json({
+      success: true,
+      message: "Feature image deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: "Error occurred",
+    });
+  }
+};
+
 // add a new product
 const addProduct = async (req, res) => {
   try {
@@ -171,4 +231,6 @@ module.exports = {
   fetchAllProducts,
   editProduct,
   deleteProduct,
+  handleFeatureImageUpload,
+  handleFeatureImageDelete,
 };
