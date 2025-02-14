@@ -186,7 +186,7 @@ function ShoppingHome() {
       </h2>
       <section className="py-12">
         <div className="mx-auto  ">
-          <div className="flex flex-col gap-1  xl:flex-row xl:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4">
             {productList && productList.length > 0
               ? productList
                   .filter((productItem) => productItem.salePrice)
@@ -213,11 +213,11 @@ function ShoppingHome() {
       </h2>
       <section className="w-full">
         <div className="container mx-auto px-4 w-full ">
-          <div className="flex flex-col sm:flex-row w-full gap-4 cursor-pointer">
+          <div className="flex flex-col sm:flex-row w-full gap-5 cursor-pointer">
             {categoriesWithIcon.map((category) => (
               <div
                 key={category.id}
-                className="relative flex flex-col w-full sm:w-1/2 h-[400px] rounded-lg items-center justify-center transition-transform duration-300 ease-in-out transform hover:scale-105"
+                className="relative flex flex-col w-full sm:w-1/2 h-[200px] rounded-3xl items-center justify-center transition-transform duration-300 ease-in-out transform hover:scale-105"
                 onClick={() =>
                   handleNavigateToListingPage(category, "category")
                 }
@@ -226,7 +226,7 @@ function ShoppingHome() {
                   loading="lazy"
                   src={category.image}
                   alt={category.label}
-                  className="w-full h-full object-cover rounded-md"
+                  className="w-full h-full object-cover rounded-3xl"
                 />
                 <div className="absolute inset-0 bg-black opacity-20 rounded-md"></div>
                 <CardContent className="absolute text-center text-white text-3xl font-bold mt-4">

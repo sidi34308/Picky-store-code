@@ -30,7 +30,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
   };
 
   return (
-    <Card className="w-full max-w-sm mx-auto p-2 sm:p-4 rounded-3xl hover:bg-accent hover:scale-105 hover:rotate-[2deg] transition-all duration-300 ease-in-out">
+    <Card className="w-full max-w-sm mx-auto p-2 sm:p-4 rounded-3xl hover:bg-accent hover:scale-105 transition-all duration-300 ease-in-out">
       <Link to={`/product/${product._id}`}>
         <div className="relative">
           <img

@@ -1,18 +1,15 @@
-import { Route, Routes } from "react-router-dom";
-// import AuthLayout from "./components/auth/layout";
-// import AuthLogin from "./pages/auth/login";
-// import AuthRegister from "./pages/auth/register";
+import { Route, Routes, Navigate } from "react-router-dom";
 import AdminLayout from "./components/admin-view/layout";
 import AdminDashboard from "./pages/admin-view/dashboard";
 import AdminProducts from "./pages/admin-view/products";
 import AdminOrders from "./pages/admin-view/orders";
 import AdminFeatures from "./pages/admin-view/features";
+import AdminLogin from "./pages/admin-view/login";
 import ShoppingLayout from "./components/shopping-view/layout";
 import NotFound from "./pages/not-found";
 import ShoppingHome from "./pages/shopping-view/home";
 import ShoppingListing from "./pages/shopping-view/listing";
 import ShoppingCheckout from "./pages/shopping-view/checkout";
-// import ShoppingAccount from "./pages/shopping-view/account";
 import CheckAuth from "./components/common/check-auth";
 import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,28 +34,24 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  // if (isLoading)
-  //   return (
-  //     <div className="w-full flex justify-center items-center h-screen">
-  //       <img src={logo} className="animate-pulse" />
-  //     </div>
-  //   );
-
-  console.log(isLoading, user, "ssssssssss");
+  const PrivateRoute = ({ children }) => {
+    const token = localStorage.getItem("token");
+    return token ? children : <Navigate to="/admin/login" />;
+  };
 
   return (
     <div className="flex flex-col overflow-hidden ">
       <Routes>
-        {/* <Route path="/" element={<ShoppingHome />} /> */}
-
-        {/* Auth Routes - Optional, remove if not needed
-        <Route path="/auth" element={<AuthLayout />}>
-          <Route path="login" element={<AuthLogin />} />
-          <Route path="register" element={<AuthRegister />} />
-        </Route> */}
-
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
@@ -68,12 +61,9 @@ function App() {
         {/* main Routes */}
         <Route path="/" element={<ShoppingLayout />}>
           <Route path="/product/:productId" element={<ProductDetails />} />
-
           <Route path="/" element={<ShoppingHome />} />
           <Route path="/about" element={<Aboutus />} />
-
           <Route path="/listing" element={<ShoppingListing />} />
-          {/* <Route path="account" element={<ShoppingAccount />} /> */}
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="/search" element={<SearchProducts />} />
@@ -83,7 +73,6 @@ function App() {
         <Route path="/Success" element={<SuccessPage />} />
 
         {/* Other Routes */}
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
