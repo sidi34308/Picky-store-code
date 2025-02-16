@@ -20,7 +20,6 @@ function AdminLogin() {
     const hardcodedUsername = "admin";
     const hardcodedPassword = "picky2025";
 
-    // Simulate a delay for better UX
     setTimeout(() => {
       if (username === hardcodedUsername && password === hardcodedPassword) {
         localStorage.setItem("token", "dummyToken");

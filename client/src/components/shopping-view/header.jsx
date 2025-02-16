@@ -52,6 +52,7 @@ function MenuItems() {
     sessionStorage.removeItem("filters");
 
     const currentFilter =
+      getCurrentMenuItem.id !== "about" &&
       getCurrentMenuItem.id !== "home" &&
       getCurrentMenuItem.id !== "products" &&
       getCurrentMenuItem.id !== "search"
