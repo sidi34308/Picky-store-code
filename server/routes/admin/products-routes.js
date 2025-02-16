@@ -6,6 +6,7 @@ const {
   editProduct,
   fetchAllProducts,
   deleteProduct,
+  toggleProductVisibility, // Import the new controller function
 } = require("../../controllers/admin/products-controller");
 
 const { upload, imageUploadUtil } = require("../../helpers/s3");
@@ -31,5 +32,6 @@ router.post("/add", addProduct);
 router.put("/edit/:id", editProduct);
 router.delete("/delete/:id", deleteProduct);
 router.get("/get", fetchAllProducts);
+router.patch("/:id/visibility", toggleProductVisibility); // Add the new endpoint
 
 module.exports = router;

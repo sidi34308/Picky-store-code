@@ -123,6 +123,8 @@ function CommonForm({
     return element;
   }
 
+  console.log("isBtnDisabled:", isBtnDisabled);
+
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">

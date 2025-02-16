@@ -1,14 +1,13 @@
-// filepath: /c:/Users/hp/Documents/GitHub/mern-ecommerce-2024/client/src/pages/admin-view/products.jsx
 import ProductImageUpload from "@/components/admin-view/image-upload";
 import AdminProductTile from "@/components/admin-view/product-tile";
 import CommonForm from "@/components/common/form";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"; // Replace Sheet with Dialog
 import { useToast } from "@/components/ui/use-toast";
 import { addProductFormElements } from "@/config";
 import {
@@ -16,6 +15,7 @@ import {
   deleteProduct,
   editProduct,
   fetchAllProducts,
+  toggleProductVisibility,
 } from "@/store/admin/products-slice";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,13 +24,14 @@ const initialFormData = {
   images: [],
   title: "",
   description: "",
-  category: [], // Change 'category' to be an array of strings
-  labels: "", // Ensure 'labels' is included
+  category: [],
+  labels: "",
   group: false,
   price: "",
   salePrice: "",
   totalStock: "",
   averageReview: 0,
+  hidden: false,
 };
 
 function AdminProducts() {
@@ -57,7 +58,7 @@ function AdminProducts() {
               ...formData,
               images: uploadedImageUrls.length
                 ? uploadedImageUrls
-                : formData.images, // Ensure images are included
+                : formData.images,
             },
           })
         ).then((data) => {
@@ -71,8 +72,8 @@ function AdminProducts() {
       : dispatch(
           addNewProduct({
             ...formData,
-            images: uploadedImageUrls, // Ensure images are included
-            labels: formData.labels, // Ensure 'labels' is included
+            images: uploadedImageUrls,
+            labels: formData.labels,
           })
         ).then((data) => {
           if (data?.payload?.success) {
@@ -95,11 +96,29 @@ function AdminProducts() {
     });
   }
 
+  function handleToggleVisibility(productId, currentVisibility) {
+    dispatch(
+      toggleProductVisibility({ id: productId, hidden: !currentVisibility })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchAllProducts());
+      }
+    });
+  }
+
   function isFormValid() {
-    return Object.keys(formData)
-      .filter((currentKey) => currentKey !== "averageReview")
-      .map((key) => formData[key] !== "")
-      .every((item) => item);
+    const requiredFields = Object.keys(formData).filter(
+      (currentKey) => currentKey !== "averageReview"
+    );
+
+    const validationResults = requiredFields.map((key) => {
+      if (Array.isArray(formData[key])) {
+        return formData[key].length > 0;
+      }
+      return formData[key] !== "";
+    });
+
+    return validationResults.every((item) => item);
   }
 
   useEffect(() => {
@@ -117,16 +136,20 @@ function AdminProducts() {
         {productList && productList.length > 0
           ? productList.map((productItem) => (
               <AdminProductTile
+                key={productItem.id}
                 setFormData={setFormData}
                 setOpenCreateProductsDialog={setOpenCreateProductsDialog}
                 setCurrentEditedId={setCurrentEditedId}
                 product={productItem}
                 handleDelete={handleDelete}
+                handleToggleVisibility={handleToggleVisibility}
               />
             ))
           : null}
       </div>
-      <Sheet
+
+      {/* Middle Popup Modal */}
+      <Dialog
         open={openCreateProductsDialog}
         onOpenChange={() => {
           setOpenCreateProductsDialog(false);
@@ -136,12 +159,14 @@ function AdminProducts() {
           setUploadedImageUrls([]);
         }}
       >
-        <SheetContent side="right" className="overflow-auto  ">
-          <SheetHeader>
-            <SheetTitle>
+        <DialogContent className="sm:max-w-[700px]">
+          {" "}
+          {/* Adjust width as needed */}
+          <DialogHeader>
+            <DialogTitle>
               {currentEditedId !== null ? "Edit Product" : "Add New Product"}
-            </SheetTitle>
-          </SheetHeader>
+            </DialogTitle>
+          </DialogHeader>
           <ProductImageUpload
             imageFiles={imageFiles}
             setImageFiles={setImageFiles}
@@ -150,7 +175,7 @@ function AdminProducts() {
             setImageLoadingState={setImageLoadingState}
             imageLoadingState={imageLoadingState}
             isEditMode={currentEditedId !== null}
-            existingImages={formData.images} // Pass existing images to the component
+            existingImages={formData.images}
           />
           <div className="py-6">
             <CommonForm
@@ -166,8 +191,8 @@ function AdminProducts() {
               isBtnDisabled={!isFormValid()}
             />
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </Fragment>
   );
 }

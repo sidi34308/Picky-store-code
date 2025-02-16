@@ -225,6 +225,32 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const toggleProductVisibility = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { hidden } = req.body;
+
+    console.log(`Toggling visibility for product ID: ${id}, hidden: ${hidden}`);
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { hidden },
+      { new: true }
+    );
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    res.json({ success: true, data: product });
+  } catch (error) {
+    console.error("Error toggling product visibility:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 module.exports = {
   handleImageUpload,
   addProduct,
@@ -233,4 +259,5 @@ module.exports = {
   deleteProduct,
   handleFeatureImageUpload,
   handleFeatureImageDelete,
+  toggleProductVisibility,
 };

@@ -62,6 +62,25 @@ export const deleteProduct = createAsyncThunk(
     return result?.data;
   }
 );
+export const toggleProductVisibility = createAsyncThunk(
+  "adminProducts/toggleProductVisibility",
+  async ({ id, hidden }, { rejectWithValue }) => {
+    try {
+      console.log(
+        `Toggling visibility for product ID: ${id}, hidden: ${hidden}`
+      );
+      const response = await axios.patch(
+        `${API_BASE_URL}/api/admin/products/${id}/visibility`, // Ensure the correct API path
+        { hidden }
+      );
+      console.log("Response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error toggling product visibility:", error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const AdminProductsSlice = createSlice({
   name: "adminProducts",
@@ -79,6 +98,16 @@ const AdminProductsSlice = createSlice({
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.productList = [];
+      })
+      .addCase(toggleProductVisibility.fulfilled, (state, action) => {
+        const updatedProduct = action.payload.data; // Use data from response
+        console.log("Updated product:", updatedProduct);
+        const index = state.productList.findIndex(
+          (product) => product._id === updatedProduct._id // Use _id instead of id
+        );
+        if (index !== -1) {
+          state.productList[index].hidden = updatedProduct.hidden;
+        }
       });
   },
 });

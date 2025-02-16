@@ -15,13 +15,13 @@ function AdminLayout() {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-screen w-full " style={{ fontFamily: "inter" }}>
       {/* admin sidebar */}
       <AdminSideBar open={openSidebar} setOpen={setOpenSidebar} />
       <div className="flex flex-1 flex-col">
         {/* admin header */}
         <AdminHeader setOpen={setOpenSidebar} />
-        <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
+        <header className="flex justify-between items-center p-4 bg-primary text-white">
           <h1 className="text-xl font-bold">Admin Dashboard</h1>
           <Button
             onClick={handleSignOut}

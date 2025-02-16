@@ -13,6 +13,7 @@ const ProductSchema = new mongoose.Schema(
     salePrice: Number,
     totalStock: Number,
     averageReview: Number,
+    hidden: Boolean, // Add the hidden field
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Edit2, Trash2 } from "lucide-react";
+import { Switch } from "@headlessui/react"; // Import the Switch component
 
 function AdminProductTile({
   product,
@@ -8,9 +9,10 @@ function AdminProductTile({
   setOpenCreateProductsDialog,
   setCurrentEditedId,
   handleDelete,
+  handleToggleVisibility, // Ensure this prop is received
 }) {
   return (
-    <Card className="w-full max-w-sm mx-auto  ">
+    <Card className="w-full max-w-sm mx-auto">
       <div>
         <div className="relative">
           <img
@@ -63,6 +65,24 @@ function AdminProductTile({
             <Trash2 size={16} />
             <span>Delete</span>
           </Button>
+          <Switch
+            checked={!product?.hidden}
+            onChange={() => {
+              console.log(
+                `Toggling visibility for product ID: ${product?._id}, hidden: ${product?.hidden}`
+              );
+              handleToggleVisibility(product?._id, product?.hidden);
+            }}
+            className={`${
+              product?.hidden ? "bg-red-500" : "bg-green-500"
+            } relative inline-flex items-center h-6 rounded-full w-11`}
+          >
+            <span
+              className={`${
+                product?.hidden ? "translate-x-1" : "translate-x-6"
+              } inline-block w-4 h-4 transform bg-white rounded-full`}
+            />
+          </Switch>
         </CardFooter>
       </div>
     </Card>

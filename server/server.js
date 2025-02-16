@@ -17,6 +17,7 @@ const shopReviewRouter = require("./routes/shop/review-routes");
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
 const sendOrderEmail = require("./routes/common/feature-routes");
+const twilioService = require("./services/twilio-service");
 
 // Create a database connection
 mongoose
@@ -29,8 +30,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
-    // origin: "http://localhost:5173",
+    // origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
+    origin: "http://localhost:5173",
     allowedHeaders: [
       "Content-Type",
       "Authorization",
