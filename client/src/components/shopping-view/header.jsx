@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import UserCartWrapper from "./cart-wrapper";
@@ -37,6 +37,7 @@ import search from "../../assets/search.svg";
 import instagram from "../../assets/icons/instagram.svg"; // Adjust the path as necessary
 import facebook from "../../assets/icons/facebook.svg"; // Adjust the path as necessary
 import tiktok from "../../assets/icons/tiktok.svg"; // Adjust the path as necessary
+
 function MenuItems() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -113,7 +114,6 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  // const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -126,8 +126,6 @@ function HeaderRightContent() {
   useEffect(() => {
     dispatch(fetchCartItems());
   }, [dispatch]);
-
-  console.log(cartItems, "sangam");
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-1">
@@ -158,7 +156,6 @@ function HeaderRightContent() {
 }
 
 function ShoppingHeader() {
-  // const { isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -212,33 +209,38 @@ function ShoppingHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs">
               <MenuItems />
-
               {/* Social Media Section */}
               <div className="flex gap-2 mt-4 lg:mt-0">
-                <a
-                  href="https://www.instagram.com/picky_qatar/" // Replace with actual Instagram link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
-                >
-                  <img src={instagram} alt="إنستغرام" className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://www.facebook.com/profile.php?id=61564280737976&mibextid=LQQJ4d" // Replace with actual Facebook link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
-                >
-                  <img src={facebook} alt="فيسبوك" className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://www.tiktok.com/@picky_qa?_t=8qX065pQrvm&_r=1" // Replace with actual TikTok link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
-                >
-                  <img src={tiktok} alt="تيك توك" className="w-6 h-6" />
-                </a>
+                <SheetClose asChild>
+                  <a
+                    href="https://www.instagram.com/picky_qatar/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                  >
+                    <img src={instagram} alt="إنستغرام" className="w-6 h-6" />
+                  </a>
+                </SheetClose>
+                <SheetClose asChild>
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61564280737976&mibextid=LQQJ4d"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                  >
+                    <img src={facebook} alt="فيسبوك" className="w-6 h-6" />
+                  </a>
+                </SheetClose>
+                <SheetClose asChild>
+                  <a
+                    href="https://www.tiktok.com/@picky_qa?_t=8qX065pQrvm&_r=1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:bg-gray-100 bg-accent p-2 rounded-xl"
+                  >
+                    <img src={tiktok} alt="تيك توك" className="w-6 h-6" />
+                  </a>
+                </SheetClose>
               </div>
             </SheetContent>
           </Sheet>
@@ -251,5 +253,4 @@ function ShoppingHeader() {
     </header>
   );
 }
-
 export default ShoppingHeader;

@@ -119,8 +119,8 @@ async function sendOrderEmail(req, res) {
 
   const adminMailOptions = {
     from: "pickystoremail@gmail.com", // This must match the authenticated user
-    // to: "Rustom3@hotmail.com",
-    to: "sidi34308s@gmail.com",
+    to: "Rustom3@hotmail.com",
+    // to: "sidi34308s@gmail.com",
     subject: "New Order Received",
     html: adminEmailHTML,
   };

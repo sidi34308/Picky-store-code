@@ -184,11 +184,11 @@ export const filterOptions = {
     { id: "groups", label: "مجموعات" },
     { id: "offers", label: "عروض" },
   ],
-  labels: [
-    { id: "weight ", label: "الاهتمام بالوزن" },
-    { id: "skincare", label: "العناية بالشعر" },
-    { id: "height", label: "زيادة الطول" },
-  ],
+  // labels: [
+  //   { id: "weight ", label: "الاهتمام بالوزن" },
+  //   { id: "skincare", label: "العناية بالشعر" },
+  //   { id: "height", label: "زيادة الطول" },
+  // ],
 };
 
 export const sortOptions = [

@@ -107,17 +107,14 @@ function AdminProducts() {
   }
 
   function isFormValid() {
-    const requiredFields = Object.keys(formData).filter(
-      (currentKey) => currentKey !== "averageReview"
-    );
-
-    const validationResults = requiredFields.map((key) => {
-      if (Array.isArray(formData[key])) {
-        return formData[key].length > 0;
-      }
-      return formData[key] !== "";
-    });
-
+    const requiredFields = [
+      "title",
+      "description",
+      "category",
+      "price",
+      "totalStock",
+    ];
+    const validationResults = requiredFields.map((field) => !!formData[field]);
     return validationResults.every((item) => item);
   }
 

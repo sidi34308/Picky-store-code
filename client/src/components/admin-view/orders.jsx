@@ -69,47 +69,54 @@ function AdminOrdersView() {
           </TableHeader>
           <TableBody>
             {orderList && orderList.length > 0 ? (
-              orderList.map((orderItem) => (
-                <TableRow key={orderItem._id}>
-                  <TableCell>{orderItem?.orderId}</TableCell>
-                  <TableCell>{formatDateTime(orderItem?.orderDate)}</TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`py-1 px-3 ${
-                        orderItem?.orderStatus === "confirmed"
-                          ? "bg-green-500 text-white"
-                          : orderItem?.orderStatus === "rejected"
-                          ? "bg-red-600 text-white"
-                          : orderItem?.orderStatus === ""
-                          ? "bg-yellow-500 text-white"
-                          : "bg-gray-500 text-white"
-                      }`}
-                    >
-                      {orderItem?.orderStatus
-                        ? "Order " + orderItem?.orderStatus
-                        : "Order Pending"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{orderItem?.totalAmount} QR</TableCell>
-                  <TableCell>
-                    <Dialog
-                      open={openDetailsDialog}
-                      onOpenChange={() => {
-                        setOpenDetailsDialog(false);
-                        dispatch(resetOrderDetails());
-                      }}
-                    >
-                      <Button
-                        className="bg-color-primary text-black hover:text-white"
-                        onClick={() => handleFetchOrderDetails(orderItem?._id)}
+              orderList
+                .slice()
+                .reverse()
+                .map((orderItem) => (
+                  <TableRow key={orderItem._id}>
+                    <TableCell>{orderItem?.orderId}</TableCell>
+                    <TableCell>
+                      {formatDateTime(orderItem?.orderDate)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`py-1 px-3 ${
+                          orderItem?.orderStatus === "confirmed"
+                            ? "bg-green-500 text-white"
+                            : orderItem?.orderStatus === "rejected"
+                            ? "bg-red-600 text-white"
+                            : orderItem?.orderStatus === ""
+                            ? "bg-yellow-500 text-white"
+                            : "bg-gray-500 text-white"
+                        }`}
                       >
-                        View Details
-                      </Button>
-                      <AdminOrderDetailsView orderDetails={orderDetails} />
-                    </Dialog>
-                  </TableCell>
-                </TableRow>
-              ))
+                        {orderItem?.orderStatus
+                          ? "Order " + orderItem?.orderStatus
+                          : "Order Pending"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{orderItem?.totalAmount} QR</TableCell>
+                    <TableCell>
+                      <Dialog
+                        open={openDetailsDialog}
+                        onOpenChange={() => {
+                          setOpenDetailsDialog(false);
+                          dispatch(resetOrderDetails());
+                        }}
+                      >
+                        <Button
+                          className="bg-color-primary text-black hover:text-white"
+                          onClick={() =>
+                            handleFetchOrderDetails(orderItem?._id)
+                          }
+                        >
+                          View Details
+                        </Button>
+                        <AdminOrderDetailsView orderDetails={orderDetails} />
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center">
