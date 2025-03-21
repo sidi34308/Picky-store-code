@@ -9,16 +9,17 @@
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="text/javascript">
       function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          { pageLanguage: "ar" },
-          "google_translate_element"
-        );
+        if (!document.querySelector(".goog-te-combo")) {
+          new google.translate.TranslateElement(
+            {
+              pageLanguage: "ar",
+              includedLanguages: "ar,en,fr,es",
+            },
+            "google_translate_element"
+          );
+        }
       }
     </script>
-    <script
-      type="text/javascript"
-      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-    ></script>
     <style>
       body > .skiptranslate {
         display: none !important;
@@ -63,6 +64,11 @@
       .goog-te-combo {
         color: #333;
         cursor: pointer;
+      }
+
+      /* Remove padding on top when a language is switched */
+      iframe.goog-te-banner-frame {
+        display: none !important;
       }
     </style>
   </head>
