@@ -20,6 +20,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "./ShoppingCheckout.css"; // Import the CSS file
+import { withTranslation } from "react-google-multi-lang";
 
 // Define validation schema
 const schema = yup.object().shape({
@@ -392,4 +393,4 @@ function ShoppingCheckout() {
   );
 }
 
-export default ShoppingCheckout;
+export default withTranslation(ShoppingCheckout);

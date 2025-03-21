@@ -1,4 +1,5 @@
 import React from "react";
+import { withTranslation } from "react-google-multi-lang";
 
 const AboutUs = () => {
   return (
