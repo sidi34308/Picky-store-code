@@ -32,7 +32,7 @@ app.use(
   cors({
     // origin: "https://picky-frontend.onrender.com", // Replace with your frontend origin
     // origin: "http://localhost:5173",
-    origin: "https://picky.qa",
+    origin: "https://www.picky.qa",
     allowedHeaders: [
       "Content-Type",
       "Authorization",
