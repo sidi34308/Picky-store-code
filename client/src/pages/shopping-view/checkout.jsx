@@ -393,4 +393,4 @@ function ShoppingCheckout() {
   );
 }
 
-export default withTranslation(ShoppingCheckout);
+export default ShoppingCheckout;
