@@ -27,11 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
-import { getFeatureImages } from "@/store/common-slice";
-// Import images from src/assets/slider
-import image1 from "@/assets/slider/1.png";
-import image2 from "../../assets/slider/2.png";
-import image3 from "../../assets/slider/3.png";
+import { getFeatureImages } from "@/store/common-slice/index";
 import WhatsAppPopup_ar from "@/components/shopping-view/WhatsAppPopup_ar";
 
 import men from "../../assets/men.png";
@@ -44,18 +40,12 @@ const categoriesWithIcon = [
   { id: "kids", label: "أطفال", image: kids, link: "/listing?category=kids" },
 ];
 
-const featureImageList = [
-  { image: image1 },
-  { image: image2 },
-  { image: image3 },
-];
-
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [featureImageList, setFeatureImageList] = useState([]); // State for dynamic images
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
-  // const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
@@ -101,6 +91,18 @@ function ShoppingHome() {
   }, [productDetails]);
 
   useEffect(() => {
+    dispatch(getFeatureImages()).then((response) => {
+      console.log(response.payload, "ss");
+
+      if (Array.isArray(response.payload)) {
+        setFeatureImageList(response.payload); // Set images from API response
+        console.log(response.payload, "sa");
+        // Set images from API response
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
     }, 15000);
@@ -117,11 +119,7 @@ function ShoppingHome() {
     );
   }, [dispatch]);
 
-  console.log(productList, "productList");
-
-  useEffect(() => {
-    dispatch(getFeatureImages());
-  }, [dispatch]);
+  console.log(featureImageList, "productList");
 
   return (
     <div
@@ -129,6 +127,7 @@ function ShoppingHome() {
       style={{ direction: "rtl" }}
     >
       <WhatsAppPopup_ar />
+
       <div className="relative w-[90vw] h-[30vh] md:h-[600px] md:w-[95vw] overflow-hidden m-8 p-1 rounded-lg nav-shadow">
         {featureImageList && featureImageList.length > 0 ? (
           featureImageList.map((slide, index) => (
@@ -150,8 +149,8 @@ function ShoppingHome() {
             />
           ))
         ) : (
-          <div className="flex items-center justify-center h-full bg-gray-200">
-            <p className="text-gray-500">No images available</p>
+          <div className="flex items-center justify-center w-full h-full ">
+            <p className="text-gray-500"></p>
           </div>
         )}
         <Button

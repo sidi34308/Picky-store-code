@@ -13,7 +13,7 @@ const s3Client = new S3Client({
 });
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage }).array("files", 10); // Expecting 'files' field with a maximum of 10 files
+const upload = multer({ storage }); // Export multer instance without predefining `.array()` or `.single()`
 
 async function imageUploadUtil(files) {
   if (!files || files.length === 0) {

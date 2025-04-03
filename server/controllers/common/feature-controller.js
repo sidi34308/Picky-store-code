@@ -2,29 +2,28 @@ const Feature = require("../../models/Feature");
 const Order = require("../../models/Order");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-
+const { uploadFeatureImage } = require("../../helpers/s3");
+const { console } = require("inspector");
+// filepath: c:\Users\hp\Documents\GitHub\Picky-store-code\server\controllers\common\feature-controller.js
 const addFeatureImage = async (req, res) => {
   try {
-    const { image } = req.body;
+    const file = req.file;
+    if (!file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
+    }
 
-    console.log(image, "image");
+    const { url } = await uploadFeatureImage(file);
+    const featureImage = new Feature({ image: url });
+    await featureImage.save();
 
-    const featureImages = new Feature({
-      image,
-    });
-
-    await featureImages.save();
-
-    res.status(201).json({
-      success: true,
-      data: featureImages,
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(201).json({ success: true, data: featureImage });
+  } catch (error) {
+    console.error("Error uploading feature image:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to upload feature image" });
   }
 };
 
@@ -36,11 +35,37 @@ const getFeatureImages = async (req, res) => {
       success: true,
       data: images,
     });
+    console.log("Fetching feature images...", images);
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
       message: "Some error occured!",
+    });
+  }
+};
+
+const deleteFeatureImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedImage = await Feature.findByIdAndDelete(id);
+
+    if (!deletedImage) {
+      return res.status(404).json({
+        success: false,
+        message: "Feature image not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Feature image deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting feature image:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete feature image",
     });
   }
 };
@@ -158,4 +183,9 @@ async function sendOrderEmail(req, res) {
   }
 }
 
-module.exports = { addFeatureImage, getFeatureImages, sendOrderEmail };
+module.exports = {
+  addFeatureImage,
+  getFeatureImages,
+  deleteFeatureImage,
+  sendOrderEmail,
+};

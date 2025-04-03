@@ -94,7 +94,7 @@ const Footer = () => {
       </div>
 
       {/* Copyright Section */}
-      <div className="text-center mt-1">
+      <div className="text-center mt-1 notranslate">
         <p className="text-gray-500 text-sm"> 2025© Picky</p>
       </div>
     </footer>

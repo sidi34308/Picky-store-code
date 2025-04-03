@@ -13,9 +13,9 @@ const { upload, imageUploadUtil } = require("../../helpers/s3");
 
 const router = express.Router();
 
-router.post("/upload-image", upload, async (req, res) => {
+router.post("/upload-image", upload.array("files", 10), async (req, res) => {
   try {
-    const result = await imageUploadUtil(req.files);
+    const result = await imageUploadUtil(req.files); // req.files for multiple files
     res.json({
       success: true,
       urls: result.map((r) => r.url),

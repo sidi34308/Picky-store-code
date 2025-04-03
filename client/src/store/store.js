@@ -9,7 +9,7 @@ import shopCartSlice from "./shop/cart-slice";
 import shopOrderSlice from "./shop/order-slice";
 import shopSearchSlice from "./shop/search-slice";
 import shopReviewSlice from "./shop/review-slice";
-import commonFeatureSlice from "./common-slice";
+import commonFeatureSlice from "./common-slice/index";
 
 const store = configureStore({
   reducer: {
