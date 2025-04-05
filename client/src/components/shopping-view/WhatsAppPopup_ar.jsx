@@ -19,7 +19,7 @@ function WhatsAppPopup_ar() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
       {isVisible && !isMinimized && (
         <motion.div
           className="bg-green-500 text-white p-4 rounded-2xl shadow-lg w-64 max-w-xs"

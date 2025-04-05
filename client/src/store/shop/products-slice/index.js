@@ -13,8 +13,6 @@ const initialState = {
 export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async ({ filterParams, sortParams }) => {
-    console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
-
     const query = new URLSearchParams({
       ...filterParams,
       sortBy: sortParams,
@@ -24,7 +22,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       `${API_BASE_URL}/api/shop/products/get?${query}`
     );
 
-    console.log(" filter filterParams", filterParams);
+    console.log(" filter filterParams", result.data);
 
     return result?.data;
   }

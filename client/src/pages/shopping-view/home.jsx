@@ -57,14 +57,19 @@ function ShoppingHome() {
 
   function handleNavigateToListingPage(getCurrentItem, section) {
     sessionStorage.removeItem("filters");
+
     const currentFilter = {
       [section]: [getCurrentItem.id],
     };
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+
+    // Scroll to the top before navigating
+    window.scrollTo(0, 0);
+
+    // Navigate to the listing page
     navigate(`/listing`);
   }
-
   function handleGetProductDetails(getCurrentProductId) {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
@@ -118,8 +123,6 @@ function ShoppingHome() {
       })
     );
   }, [dispatch]);
-
-  console.log(featureImageList, "productList");
 
   return (
     <div
@@ -181,14 +184,18 @@ function ShoppingHome() {
         </Button>
       </div>
       <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
-        العروض
+        منتجات اخترناها لك
       </h2>
       <section className="py-12">
         <div className="mx-auto  ">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4">
             {productList && productList.length > 0
               ? productList
-                  .filter((productItem) => productItem.salePrice)
+                  .filter(
+                    (productItem) =>
+                      // productItem.salePrice &&
+                      !productItem.hidden
+                  )
                   .slice(0, 4)
                   .map((productItem) => (
                     <div

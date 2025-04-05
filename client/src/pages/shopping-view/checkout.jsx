@@ -10,23 +10,22 @@ import SuccessMessage from "./SuccessMessage";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { createNewOrder } from "@/store/shop/order-slice";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TextField } from "@mui/material";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import "./ShoppingCheckout.css"; // Import the CSS file
+import "./ShoppingCheckout.css";
 import { withTranslation } from "react-google-multi-lang";
+import logo from "../../assets/logo.svg";
 
-// Define validation schema
 const schema = yup.object().shape({
   fullName: yup.string().required("الاسم الكامل مطلوب"),
   email: yup.string().email("البريد الإلكتروني غير صالح").optional(),
-  birthDate: yup.date().nullable(),
+  birthYear: yup.string().required("تاريخ الميلاد مطلوب"),
+  birthMonth: yup.string().required("تاريخ الميلاد مطلوب"),
+  birthDay: yup.string().required("تاريخ الميلاد مطلوب"),
   phone: yup.string().required("رقم الهاتف مطلوب"),
   address: yup.string().optional(),
   region: yup.string().required("اسم المنطقة مطلوب"),
@@ -53,7 +52,9 @@ function ShoppingCheckout() {
     defaultValues: {
       fullName: "",
       email: "",
-      birthDate: null,
+      birthYear: "",
+      birthMonth: "",
+      birthDay: "",
       phone: "",
       address: "",
       region: "",
@@ -90,9 +91,9 @@ function ShoppingCheckout() {
     }
   }, [cartItems, productList]);
 
-  const calculateAge = (birthDate) => {
+  const calculateAge = (year, month, day) => {
     const today = new Date();
-    const birthDateObj = new Date(birthDate);
+    const birthDateObj = new Date(`${year}-${month}-${day}`);
     let age = today.getFullYear() - birthDateObj.getFullYear();
     const monthDifference = today.getMonth() - birthDateObj.getMonth();
     if (
@@ -105,7 +106,7 @@ function ShoppingCheckout() {
   };
 
   const onSubmit = async (data) => {
-    const age = calculateAge(data.birthDate);
+    const age = calculateAge(data.birthYear, data.birthMonth, data.birthDay);
     if (age < 0) {
       toast({
         title: "تاريخ الميلاد غير صالح.",
@@ -119,7 +120,7 @@ function ShoppingCheckout() {
     const orderData = {
       ...data,
       age,
-      birthDate: data.birthDate, // Ensure birth date is included in the order data
+      birthDate: `${data.birthYear}-${data.birthMonth}-${data.birthDay}`,
       cartItems: cartItems.map((cartItem) => {
         const product = productList.find((p) => p._id === cartItem.productId);
         return {
@@ -136,12 +137,11 @@ function ShoppingCheckout() {
       }),
       totalAmount,
       orderDate: new Date().toISOString(),
-      orderId: `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`, // Generate a simple, unique order ID
+      orderId: `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
     };
 
     try {
       await sendOrderEmail(orderData);
-      // await dispatch(createNewOrder(orderData)).unwrap();
       dispatch(clearCart());
       setShowSuccess(true);
       navigate("/Success");
@@ -157,12 +157,26 @@ function ShoppingCheckout() {
     }
   };
 
+  const generateOptions = (start, end) => {
+    return Array.from({ length: end - start + 1 }, (_, i) => {
+      const value = (start + i).toString().padStart(2, "0");
+      return (
+        <option key={value} value={value}>
+          {value}
+        </option>
+      );
+    });
+  };
+
   return (
     <div
       className="min-w-full flex flex-col gap-6 px-10 sm:px-20 py-10 font-alexandria"
       style={{ direction: "rtl" }}
     >
-      <div className="flex items-center gap-2 justify-end">
+      <div className="flex items-center gap-2 justify-between">
+        <a to="/" className="flex  justify-center items-center ">
+          <img src={logo} alt="Logo" className="h-26 w-26" />
+        </a>
         <button
           onClick={() => navigate(-1)}
           className="p-2 rounded-md hover:bg-accent transition duration-300 z-10"
@@ -170,16 +184,62 @@ function ShoppingCheckout() {
           <ArrowLeft className="w-6 h-6 text-primary" />
         </button>
       </div>
-      <h2 className="text-xl font-bold mb-5 text-black">
+
+      <h2 className="text-md font-bold mb-5 text-primary">
         املأ البيانات أدناه وسنقوم بالتواصل معك في أقرب وقت لتأكيد الطلب وتوصيله
         إلى بابك.
       </h2>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        <div className="space-y-4">
-          {/* Full Name Field */}
+
+      <div className="flex flex-col md:flex-row gap-8 w-full">
+        <div className="md:w-1/2 w-full space-y-4">
+          <h3 className="text-lg font-bold mb-4">ملخص الطلب</h3>
+          {cartItems && cartItems.length > 0 ? (
+            <div className="space-y-4" style={{ direction: "ltr" }}>
+              {cartItems.map((item) => (
+                <UserCartItemsContent
+                  key={item.productId}
+                  cartItem={item}
+                  allProducts={productList}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">عربة التسوق فارغة.</p>
+          )}
+          <div className="text-primary">
+            قد تنطبق رسوم توصيل إضافية حسب المنطقة
+          </div>
+          <div className="text-xl flex justify-between font-semibold text-black">
+            <span>المجموع</span>
+            <span>
+              {totalAmount} {" ر.ق "}
+            </span>
+          </div>
+
+          <form
+            className="flex justify-between gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <a
+              href="/"
+              className="mt-6 flex-2 bg-white text-primary hover:bg-accent rounded-md py-3 px-3"
+            >
+              تسوق المزيد
+            </a>
+            <Button
+              type="submit"
+              className="mt-6 flex-1 bg-primary text-white hover:bg-accent hover:text-primary rounded-md py-6 px-3"
+              disabled={isSubmitting || cartItems.length === 0}
+            >
+              {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
+            </Button>
+          </form>
+        </div>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="md:w-1/2 w-full space-y-6 bg-[#f8f8f8] p-3 rounded-xl"
+        >
           <div>
             <label className="block mb-2 font-bold">
               الاسم الكامل <span className="text-red-600">*</span>
@@ -188,20 +248,24 @@ function ShoppingCheckout() {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  variant="outlined"
-                  fullWidth
-                  placeholder="يرجى إدخال الاسم الكامل"
-                  error={!!errors.fullName}
-                  helperText={errors.fullName?.message}
-                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                />
+                <div className="relative">
+                  <TextField
+                    {...field}
+                    variant="outlined"
+                    fullWidth
+                    placeholder="يرجى إدخال الاسم الكامل"
+                    className="bg-white rounded-xl"
+                  />
+                  {errors.fullName && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.fullName.message}
+                    </p>
+                  )}
+                </div>
               )}
             />
           </div>
 
-          {/* Email Field */}
           <div>
             <label className="block mb-2 font-bold">البريد الإلكتروني</label>
             <Controller
@@ -214,42 +278,53 @@ function ShoppingCheckout() {
                   variant="outlined"
                   fullWidth
                   placeholder="يرجى إدخال البريد الإلكتروني"
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                  className="bg-primary rounded-xl border-none"
                 />
               )}
             />
           </div>
 
-          {/* Birth Date Field */}
           <div>
-            <label className="block mb-2 font-bold">تاريخ الميلاد</label>
-            <Controller
-              name="birthDate"
-              control={control}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    {...field}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        fullWidth
-                        placeholder="يرجى اختيار تاريخ الميلاد"
-                        error={!!errors.birthDate}
-                        helperText={errors.birthDate?.message}
-                        className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              )}
-            />
+            <label className="block mb-2 font-bold">
+              تاريخ الميلاد <span className="text-red-600">*</span>
+            </label>
+            <div className="flex gap-2">
+              <Controller
+                name="birthYear"
+                control={control}
+                render={({ field }) => (
+                  <select {...field} className="w-1/3  rounded-xl p-2">
+                    <option value="">السنة</option>
+                    {generateOptions(1940, new Date().getFullYear())}
+                  </select>
+                )}
+              />
+              <Controller
+                name="birthMonth"
+                control={control}
+                render={({ field }) => (
+                  <select {...field} className="w-1/3  rounded-xl p-2">
+                    <option value="">الشهر</option>
+                    {generateOptions(1, 12)}
+                  </select>
+                )}
+              />
+              <Controller
+                name="birthDay"
+                control={control}
+                render={({ field }) => (
+                  <select {...field} className="w-1/3  rounded-xl p-2">
+                    <option value="">اليوم</option>
+                    {generateOptions(1, 31)}
+                  </select>
+                )}
+              />
+            </div>
+            {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
+              <p className="mt-2 text-sm text-red-600">تاريخ الميلاد مطلوب</p>
+            )}
           </div>
 
-          {/* Phone Field */}
           <div>
             <label className="block mb-2 font-bold">
               رقم الهاتف <span className="text-red-600">*</span>
@@ -277,27 +352,6 @@ function ShoppingCheckout() {
             />
           </div>
 
-          {/* Address Field */}
-          <div>
-            <label className="block mb-2 font-bold">العنوان</label>
-            <Controller
-              name="address"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  variant="outlined"
-                  fullWidth
-                  placeholder="يرجى إدخال العنوان"
-                  error={!!errors.address}
-                  helperText={errors.address?.message}
-                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                />
-              )}
-            />
-          </div>
-
-          {/* Region Field */}
           <div>
             <label className="block mb-2 font-bold">
               اسم المنطقة <span className="text-red-600">*</span>
@@ -306,20 +360,24 @@ function ShoppingCheckout() {
               name="region"
               control={control}
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  variant="outlined"
-                  fullWidth
-                  placeholder="يرجى إدخال اسم المنطقة"
-                  error={!!errors.region}
-                  helperText={errors.region?.message}
-                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                />
+                <div className="relative">
+                  <TextField
+                    {...field}
+                    variant="outlined"
+                    fullWidth
+                    placeholder="يرجى إدخال اسم المنطقة"
+                    className="bg-white rounded-xl"
+                  />
+                  {errors.region && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.region.message}
+                    </p>
+                  )}
+                </div>
               )}
             />
           </div>
 
-          {/* Notes Field */}
           <div>
             <label className="block mb-2 font-bold">ملاحظات إضافية</label>
             <Controller
@@ -335,60 +393,22 @@ function ShoppingCheckout() {
                   placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
                   error={!!errors.notes}
                   helperText={errors.notes?.message}
-                  className="bg-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                  className="bg-white rounded-xl"
                 />
               )}
             />
           </div>
-        </div>
+        </form>
+      </div>
 
-        {/* Order Summary Section */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold mb-4">ملخص الطلب</h3>
-          <div className="mb-4">
-            {cartItems && cartItems.length > 0 ? (
-              <div className="space-y-4" style={{ direction: "ltr" }}>
-                {cartItems.map((item) => (
-                  <UserCartItemsContent
-                    key={item.productId}
-                    cartItem={item}
-                    allProducts={productList}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600">عربة التسوق فارغة.</p>
-            )}
-          </div>
-          <div className="text-gray-600">
-            قد تنطبق رسوم توصيل إضافية حسب المنطقة
-          </div>
-          <div className="flex justify-between font-bold text-black">
-            <span>المجموع</span>
-            <span>{totalAmount} ريال</span>
-          </div>
-          <div className="flex justify-between gap-4">
-            <a
-              href="/"
-              className="mt-6 flex-2 bg-white text-primary hover:bg-accent rounded-md py-2 px-3"
-            >
-              تسوق المزيد
-            </a>
-            <Button
-              type="submit"
-              className="mt-6 flex-1 bg-pink-500 text-white hover:bg-pink-600"
-              disabled={isSubmitting || cartItems.length === 0}
-            >
-              {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
-            </Button>
-          </div>
+      <SuccessMessage
+        isVisible={showSuccess}
+        onClose={() => setShowSuccess(false)}
+      />
 
-          <SuccessMessage
-            isVisible={showSuccess}
-            onClose={() => setShowSuccess(false)}
-          />
-        </div>
-      </form>
+      <div className="text-center mt-1 notranslate">
+        <p className="text-gray-500 text-sm"> 2025© Picky</p>
+      </div>
     </div>
   );
 }

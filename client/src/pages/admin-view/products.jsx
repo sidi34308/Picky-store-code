@@ -57,8 +57,8 @@ function AdminProducts() {
             formData: {
               ...formData,
               images: uploadedImageUrls.length
-                ? uploadedImageUrls
-                : formData.images,
+                ? uploadedImageUrls // Use updated image URLs
+                : formData.images, // Fallback to existing images
             },
           })
         ).then((data) => {
@@ -67,6 +67,7 @@ function AdminProducts() {
             setFormData(initialFormData);
             setOpenCreateProductsDialog(false);
             setCurrentEditedId(null);
+            setUploadedImageUrls([]); // Reset uploaded image URLs
           }
         })
       : dispatch(
@@ -81,6 +82,7 @@ function AdminProducts() {
             setOpenCreateProductsDialog(false);
             setImageFiles([]);
             setFormData(initialFormData);
+            setUploadedImageUrls([]); // Reset uploaded image URLs
             toast({
               title: "Product added successfully",
             });

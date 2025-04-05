@@ -66,7 +66,7 @@ function UserCartItemsContent({ cartItem, allProducts }) {
   };
 
   return (
-    <div className="flex items-center gap-4  p-0 sm:p-4 border-b last:border-none">
+    <div className="flex items-center gap-4  pb-5 sm:p-4 border-b last:border-none">
       <img
         loading="lazy"
         src={product?.images[0]}
@@ -103,12 +103,15 @@ function UserCartItemsContent({ cartItem, allProducts }) {
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="text-sm sm:text-lg font-medium  text-gray-900">
-          {" ر.ق "}
+        <p
+          className="text-sm sm:text-lg font-medium  text-gray-900"
+          style={{ direction: "rtl" }}
+        >
           {(
             (product?.salePrice > 0 ? product?.salePrice : product?.price) *
             cartItem?.quantity
           ).toFixed(2)}
+          {" ر.ق "}
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}

@@ -70,7 +70,7 @@ body {
   }
 
   body {
-    @apply bg-[#F5F5F5] text-primary;
+    @apply bg-[#ffffff] text-primary;
     font-family: "Alexandria", "inter";
   }
 }
@@ -152,8 +152,7 @@ body {
 /* phone-input.css */
 .PhoneInput {
   direction: ltr;
-  @apply w-full py-2 px-4 bg-white rounded-lg border border-gray-300 transition-all duration-200 
-         focus:ring-2 focus:ring-blue-500 focus:border-blue-500; /* Change to your preferred color */
+  @apply w-full py-1 px-4 bg-white rounded-sm border border-gray-300 transition-all duration-200; /* Change to your preferred color */
 }
 
 .PhoneInputInput {

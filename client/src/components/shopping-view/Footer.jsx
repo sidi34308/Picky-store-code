@@ -11,7 +11,8 @@ const Footer = () => {
     sessionStorage.removeItem("filters");
     const currentFilter = category ? { category: [category] } : null;
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-
+    // Scroll to the top before navigating
+    window.scrollTo(0, 0);
     navigate(`/listing?category=${category}`);
   };
   return (
@@ -48,7 +49,7 @@ const Footer = () => {
 
         {/* Contact Section */}
         <div className="flex flex-col items-start space-y-2 mt-4 lg:mt-0">
-          <p className="text-gray-600">للتواصل والشكاوي والاقتراحات</p>
+          <p className="text-gray-600">تواصل معنا</p>
           <a
             href="mailto:info@picky.qa"
             className="text-primary/70 font-medium hover:underline"

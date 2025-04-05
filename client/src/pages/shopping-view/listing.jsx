@@ -136,7 +136,7 @@ function ShoppingListing() {
 
   return (
     <div
-      className=" bg-[#f3f3f3] min-h-screen grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6"
+      className=" bg-[#f5f5f5] min-h-screen grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6"
       style={{ direction: "rtl" }}
     >
       <WhatsAppPopup_ar />
@@ -182,14 +182,16 @@ function ShoppingListing() {
                 <Skeleton key={index} className="h-64 w-full" />
               ))
             : productList && productList.length > 0
-            ? productList.map((productItem) => (
-                <ShoppingProductTile
-                  key={productItem.id}
-                  handleGetProductDetails={handleGetProductDetails}
-                  product={productItem}
-                  handleAddtoCart={handleAddtoCart}
-                />
-              ))
+            ? productList
+                .filter((productItem) => !productItem.hidden)
+                .map((productItem) => (
+                  <ShoppingProductTile
+                    key={productItem.id}
+                    handleGetProductDetails={handleGetProductDetails}
+                    product={productItem}
+                    handleAddtoCart={handleAddtoCart}
+                  />
+                ))
             : null}
         </div>
       </div>

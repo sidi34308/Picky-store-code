@@ -126,14 +126,17 @@ function SearchProducts() {
             </h1>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {searchResults.slice(0, 4).map((item) => (
-                <ShoppingProductTile
-                  key={item.id}
-                  handleAddtoCart={handleAddtoCart}
-                  product={item}
-                  handleGetProductDetails={handleGetProductDetails}
-                />
-              ))}
+              {searchResults
+                .filter((item) => !item.hidden) // Filter out hidden items
+                .slice(0, 4)
+                .map((item) => (
+                  <ShoppingProductTile
+                    key={item.id}
+                    handleAddtoCart={handleAddtoCart}
+                    product={item}
+                    handleGetProductDetails={handleGetProductDetails}
+                  />
+                ))}
             </div>
           )}
         </>
@@ -142,6 +145,7 @@ function SearchProducts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {productList && productList.length > 0
           ? productList
+              .filter((productItem) => !productItem.hidden) // Filter out hidden items
               .slice(0, 4)
               .map((productItem) => (
                 <ShoppingProductTile
