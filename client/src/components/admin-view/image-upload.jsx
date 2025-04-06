@@ -92,7 +92,7 @@ function ProductImageUpload({
     const data = new FormData();
     imageFiles.forEach((file) => data.append("files", file)); // Use 'files' as the field name
     const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+      "https://picky-backend.onrender.com/api/admin/products/upload-image",
       data
     );
 
