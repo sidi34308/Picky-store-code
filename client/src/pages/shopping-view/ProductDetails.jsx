@@ -140,7 +140,7 @@ function ProductDetails() {
           <ArrowLeft className="w-6 h-6 text-primary" />
         </button>
         <div className="flex flex-col lg:flex-row">
-          <div className=" lg:w-3/5 p-8">
+          <div className="lg:w-3/5 p-8">
             <div className="mb-4">
               <Slider
                 {...sliderSettings}
@@ -149,13 +149,22 @@ function ProductDetails() {
               >
                 {images.map((image, index) => (
                   <div key={index} className="focus:outline-none">
-                    <ImageMagnifier
-                      src={image}
-                      alt={`${productDetails.title} - Image ${index + 1}`}
-                      width="100%"
-                      height="100%"
-                      className="object-cover w-full  h-full rounded-xl"
-                    />
+                    <div className="hidden lg:block">
+                      <ImageMagnifier
+                        src={image}
+                        alt={`${productDetails.title} - Image ${index + 1}`}
+                        width="100%"
+                        height="100%"
+                        className="object-cover w-full h-full rounded-xl"
+                      />
+                    </div>
+                    <div className="block lg:hidden">
+                      <img
+                        src={image}
+                        alt={`${productDetails.title} - Image ${index + 1}`}
+                        className="object-cover w-full h-full rounded-xl"
+                      />
+                    </div>
                   </div>
                 ))}
               </Slider>
@@ -183,7 +192,7 @@ function ProductDetails() {
           </div>
 
           <div
-            className="lg:w-2/5 p-8 flex flex-col justify-between bg-gray-50 rounded-2xl"
+            className="lg:w-2/5 p-8 flex flex-col justify-between bg-accent/40 rounded-2xl"
             style={{ direction: "rtl" }}
           >
             <div>
@@ -194,20 +203,23 @@ function ProductDetails() {
                   ""
                 )}
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-5 sm:mb-6">
                 {productDetails.title}
               </h1>
 
               {productDetails.totalStock <= 5 && (
-                <div className="text-red-500 text-lg mb-6">
+                <div className="text-red-500 text-sm sm:text-lg mb-6">
                   فقط {productDetails.totalStock} عناصر متبقية في المخزون
                 </div>
               )}
-              <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                {productDetails.description}
-              </p>
+              <p
+                className="text-gray-600 text-sm sm:text-lg mb-6 leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: productDetails.description.replace(/\n/g, "<br/>"),
+                }}
+              ></p>
               <div className="flex items-center justify-between mb-6">
-                <div className="text-3xl font-semibold text-gray-900 mb-6">
+                <div className="text-xl sm:text-3xl font-semibold text-gray-900 mb-6">
                   {productDetails.price.toFixed(2)} ر.ق
                 </div>
                 <div className="flex items-center mb-6">
@@ -230,7 +242,7 @@ function ProductDetails() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full bg-primary text-white py-4 rounded-lg font-medium text-lg hover:bg-primary transition duration-300 flex items-center justify-center space-x-2"
+                className="w-full bg-primary text-white py-4 rounded-lg font-medium text-md sm:text-lg hover:bg-primary transition duration-300 flex items-center justify-center space-x-2"
                 onClick={() =>
                   handleAddToCart(
                     productDetails?._id,

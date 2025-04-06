@@ -182,7 +182,7 @@ function ShoppingHeader() {
               <div key={item.id}>
                 <div
                   onClick={() => handleNavigate(item)}
-                  className="text-primary text-md px-4 py-2 rounded-md hover:bg-accent cursor-pointer"
+                  className="text-primary text-xl px-4 py-2 rounded-md hover:bg-accent cursor-pointer"
                 >
                   {item.label}
                 </div>

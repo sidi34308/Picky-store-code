@@ -131,7 +131,7 @@ function ShoppingHome() {
     >
       <WhatsAppPopup_ar />
 
-      <div className="relative w-[90vw] h-[30vh] md:h-[600px] md:w-[95vw] overflow-hidden m-8 p-1 rounded-lg nav-shadow">
+      <div className="relative w-[90vw] h-[20vh] md:h-[600px] md:w-[95vw] overflow-hidden m-8 p-1 rounded-lg nav-shadow">
         {featureImageList && featureImageList.length > 0 ? (
           featureImageList.map((slide, index) => (
             <img
@@ -183,10 +183,10 @@ function ShoppingHome() {
           <ChevronRightIcon className="w-4 h-4 text-gray-700" />
         </Button>
       </div>
-      <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
+      <h2 className="text-2xl sm:text-3xl font-semibold text-[#E73983] mt-8 w-full pr-10 sm:pr-20">
         منتجات اخترناها لك
       </h2>
-      <section className="py-12">
+      <section className="py-4">
         <div className="mx-auto  ">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4">
             {productList && productList.length > 0
@@ -214,7 +214,7 @@ function ShoppingHome() {
         </div>
       </section>
 
-      <h2 className="text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-60">
+      <h2 className="text-2xl sm:text-3xl font-semibold text-[#E73983] mb-8 w-full pr-10 sm:pr-20">
         الأقسام
       </h2>
       <section className="w-full">

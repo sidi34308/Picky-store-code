@@ -112,7 +112,7 @@ function ProductImageUpload({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-lg p-4`}
+        className={`border-2 border-dashed rounded-3xl p-4`}
       >
         <Input
           id="image-upload"
@@ -126,7 +126,10 @@ function ProductImageUpload({
           htmlFor="image-upload"
           className={`flex flex-col items-center justify-center h-32 cursor-pointer mb-4`}
         >
-          <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+          <UploadCloudIcon
+            color="#4d1461"
+            className="w-10 h-10 text-muted-foreground mb-2"
+          />
           <span>Drag & drop or click to upload images</span>
         </Label>
         {imageLoadingState ? (

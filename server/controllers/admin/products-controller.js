@@ -156,7 +156,9 @@ const editProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      image,
+      images, // Updated images array
+      newImages, // New images to be uploaded
+      removedImageKeys, // Keys of images to be removed from S3
       title,
       description,
       category,
@@ -175,6 +177,38 @@ const editProduct = async (req, res) => {
         message: "Product not found",
       });
 
+    // Handle removal of existing images
+    if (removedImageKeys && removedImageKeys.length > 0) {
+      for (const key of removedImageKeys) {
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: key,
+        };
+        const command = new DeleteObjectCommand(params);
+        await s3Client.send(command);
+
+        // Remove the image URL from the product's images array
+        findProduct.images = findProduct.images.filter(
+          (imageUrl) => !imageUrl.includes(key)
+        );
+      }
+    }
+
+    // Handle upload of new images
+    if (newImages && newImages.length > 0) {
+      const uploadResults = await imageUploadUtil(newImages);
+      const newImageUrls = uploadResults.map((result) => result.url);
+      findProduct.images = [...findProduct.images, ...newImageUrls];
+    }
+
+    // Merge existing images with the provided images array
+    if (images && Array.isArray(images)) {
+      findProduct.images = Array.from(
+        new Set([...findProduct.images, ...images])
+      );
+    }
+
+    // Update other product fields
     findProduct.title = title || findProduct.title;
     findProduct.description = description || findProduct.description;
     findProduct.category = category || findProduct.category;
@@ -183,7 +217,6 @@ const editProduct = async (req, res) => {
     findProduct.salePrice =
       salePrice === "" ? 0 : salePrice || findProduct.salePrice;
     findProduct.totalStock = totalStock || findProduct.totalStock;
-    findProduct.image = image || findProduct.image;
     findProduct.averageReview = averageReview || findProduct.averageReview;
 
     await findProduct.save();
@@ -195,7 +228,7 @@ const editProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: "Error occurred",
     });
   }
 };

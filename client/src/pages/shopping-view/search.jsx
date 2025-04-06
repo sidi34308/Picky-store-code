@@ -105,7 +105,7 @@ function SearchProducts() {
 
       {/* Display Skeleton when searching */}
       {isSearching && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
           {Array(3)
             .fill(null)
             .map((_, index) => (
@@ -121,11 +121,11 @@ function SearchProducts() {
       {!isSearching && keyword && keyword.trim().length > 3 && (
         <>
           {!searchResults.length ? (
-            <h1 className="text-2xl font-bold opacity-90">
+            <h1 className="text-xl font-bold opacity-90 mb-10">
               لم يتم العثور على نتائج مطابقة لبحثك!
             </h1>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
               {searchResults
                 .filter((item) => !item.hidden) // Filter out hidden items
                 .slice(0, 4)

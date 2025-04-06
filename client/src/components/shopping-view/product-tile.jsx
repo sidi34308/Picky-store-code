@@ -30,7 +30,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
   };
 
   return (
-    <Card className="w-full max-w-sm mx-auto p-2 sm:p-4 rounded-3xl hover:bg-accent hover:scale-105 transition-all duration-300 ease-in-out">
+    <Card className="h-full w-full max-w-sm mx-auto p-2 sm:p-4 rounded-3xl hover:bg-accent hover:scale-105 transition-all duration-300 ease-in-out flex flex-col justify-between">
       <Link
         to={`/product/${product?._id}`}
         onClick={() => window.scrollTo(0, 0)}
@@ -40,7 +40,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
             loading="lazy"
             src={product?.images?.[0]}
             alt={product?.title}
-            className={`w-full h-[160px] sm:h-[250px] object-cover rounded-3xl ${
+            className={`w-full h-[140px] sm:h-[250px] object-cover rounded-3xl ${
               product?.totalStock === 0 ? "grayscale" : ""
             }`}
           />
@@ -62,7 +62,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
           ) : null}
         </div>
         <CardContent className="p-4">
-          <h2 className="text-md sm:text-xl font-semibold text-primary mb-2">
+          <h2 className="text-sm sm:text-xl font-semibold text-primary mb-2">
             {product?.title}
           </h2>
 
@@ -116,7 +116,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
         ) : (
           <button
             onClick={handleAddToCartClick}
-            className="w-full bg-primary text-sm sm:text-xl text-white py-3 rounded-2xl hover:opacity-90"
+            className="w-full bg-primary  text-sm sm:text-xl text-white py-3 rounded-2xl hover:opacity-90"
           >
             إضافة للسلة
           </button>
