@@ -153,6 +153,9 @@ const fetchAllProducts = async (req, res) => {
 
 //edit a product
 const editProduct = async (req, res) => {
+  console.log("Editing product with ID:", req.params.id); // Debugging step
+  console.log("Request body:", req.body); // Debugging step
+
   try {
     const { id } = req.params;
     const {
@@ -177,21 +180,9 @@ const editProduct = async (req, res) => {
         message: "Product not found",
       });
 
-    // Handle removal of existing images
-    if (removedImageKeys && removedImageKeys.length > 0) {
-      for (const key of removedImageKeys) {
-        const params = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME,
-          Key: key,
-        };
-        const command = new DeleteObjectCommand(params);
-        await s3Client.send(command);
-
-        // Remove the image URL from the product's images array
-        findProduct.images = findProduct.images.filter(
-          (imageUrl) => !imageUrl.includes(key)
-        );
-      }
+    // Directly update the images array with the provided images
+    if (images && Array.isArray(images)) {
+      findProduct.images = images;
     }
 
     // Handle upload of new images
@@ -199,13 +190,6 @@ const editProduct = async (req, res) => {
       const uploadResults = await imageUploadUtil(newImages);
       const newImageUrls = uploadResults.map((result) => result.url);
       findProduct.images = [...findProduct.images, ...newImageUrls];
-    }
-
-    // Merge existing images with the provided images array
-    if (images && Array.isArray(images)) {
-      findProduct.images = Array.from(
-        new Set([...findProduct.images, ...images])
-      );
     }
 
     // Update other product fields
@@ -219,7 +203,9 @@ const editProduct = async (req, res) => {
     findProduct.totalStock = totalStock || findProduct.totalStock;
     findProduct.averageReview = averageReview || findProduct.averageReview;
 
+    // Save the updated product
     await findProduct.save();
+
     res.status(200).json({
       success: true,
       data: findProduct,
