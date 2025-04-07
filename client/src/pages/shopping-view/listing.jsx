@@ -56,21 +56,12 @@ function ShoppingListing() {
   }
 
   function handleFilter(getSectionId, getCurrentOption) {
-    let cpyFilters = { ...filters };
-    const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+    const cpyFilters = { ...filters };
 
-    if (indexOfCurrentSection === -1) {
-      cpyFilters = {
-        ...cpyFilters,
-        [getSectionId]: [getCurrentOption],
-      };
+    if (cpyFilters[getSectionId] === getCurrentOption) {
+      delete cpyFilters[getSectionId]; // Deselect the filter if already selected
     } else {
-      const indexOfCurrentOption =
-        cpyFilters[getSectionId].indexOf(getCurrentOption);
-
-      if (indexOfCurrentOption === -1)
-        cpyFilters[getSectionId].push(getCurrentOption);
-      else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+      cpyFilters[getSectionId] = getCurrentOption; // Select the new filter
     }
 
     setFilters(cpyFilters);

@@ -70,7 +70,7 @@ body {
   }
 
   body {
-    @apply bg-[#ffffff] text-primary;
+    @apply bg-zinc-50 text-primary;
     font-family: "Alexandria", "inter";
   }
 }

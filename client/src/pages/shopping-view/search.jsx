@@ -86,7 +86,7 @@ function SearchProducts() {
 
   return (
     <div
-      className="container  mx-auto md:px-6 px-4 py-8"
+      className="container  mx-auto md:px-6 px-4 py-8 "
       style={{ direction: "rtl" }}
     >
       <div className="flex justify-center mb-10 ">
@@ -98,20 +98,28 @@ function SearchProducts() {
             className="py-8 pr-20 nav-shadow w-full rounded-md transition duration-1000"
             placeholder="ابحث عن منتج..."
           />
-          <Search className="absolute right-4 text-gray-400" size={30} />{" "}
+          <Search className="absolute right-4 text-zinc-400" size={30} />{" "}
           {/* Search Icon */}
         </div>
       </div>
 
       {/* Display Skeleton when searching */}
       {isSearching && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
-          {Array(3)
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4 mb-10">
+          {Array(2)
             .fill(null)
             .map((_, index) => (
               <div
                 key={index}
-                className="w-full h-28 bg-gray-100 rounded-md animate-pulse py-10"
+                className="w-full h-28 bg-zinc-200 rounded-md animate-pulse py-10"
+              />
+            ))}
+          {Array(2)
+            .fill(null)
+            .map((_, index) => (
+              <div
+                key={index}
+                className="w-full h-28 bg-zinc-100 rounded-md animate-pulse py-10"
               />
             ))}
         </div>
@@ -125,7 +133,7 @@ function SearchProducts() {
               لم يتم العثور على نتائج مطابقة لبحثك!
             </h1>
           ) : (
-            <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
+            <div className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4 mb-10">
               {searchResults
                 .filter((item) => !item.hidden) // Filter out hidden items
                 .slice(0, 4)
@@ -142,7 +150,7 @@ function SearchProducts() {
         </>
       )}
       <h3 className="text-lg font-medium">تسوق ايضاً</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-4 p-4">
         {productList && productList.length > 0
           ? productList
               .filter((productItem) => !productItem.hidden) // Filter out hidden items

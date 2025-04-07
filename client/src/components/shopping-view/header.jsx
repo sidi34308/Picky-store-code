@@ -68,7 +68,7 @@ function ShoppingHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full b bg-background">
+    <header className="sticky top-0 z-50 w-full b bg-zinc-50 ">
       <div className="flex h-20 items-center justify-between px-4 md:px-20">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Logo" className="h-20 w-20" />

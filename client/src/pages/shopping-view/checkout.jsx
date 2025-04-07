@@ -238,7 +238,7 @@ function ShoppingCheckout() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="md:w-1/2 w-full space-y-6 bg-[#f8f8f8] p-3 rounded-xl"
+          className="md:w-1/2 w-full space-y-6 bg-[#f5f5f5] p-3 rounded-xl"
         >
           <div>
             <label className="block mb-2 font-bold">

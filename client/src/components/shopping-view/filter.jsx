@@ -21,12 +21,7 @@ function ProductFilter({ filters, handleFilter }) {
                   <SquareOption
                     key={option.id}
                     label={option.label}
-                    selected={
-                      filters &&
-                      Object.keys(filters).length > 0 &&
-                      filters[keyItem] &&
-                      filters[keyItem].indexOf(option.id) > -1
-                    }
+                    selected={filters && filters[keyItem] === option.id}
                     onClick={() => handleFilter(keyItem, option.id)}
                   />
                 ))}

@@ -9,7 +9,7 @@ const SquareOption = React.forwardRef(
       className={cn(
         "cursor-pointer flex items-center justify-center  px-2 py-2 rounded-md text-sm font-medium transition-colors",
         selected ? "bg-primary text-white " : "bg-white text-primary ",
-        "hover:bg-[#F0EBF1] ",
+        "hover:bg-accent hover:text-primary ",
         className
       )}
     >
